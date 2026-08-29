@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# lab - thin wrapper around per-stack docker compose projects.
+# Usage:
+#   ./lab up|down|restart|pull|ps           # all stacks
+#   ./lab up jellyfin qbittorrent           # specific stacks
+#   ./lab logs jellyfin -f                  # args after '-' pass through to compose
+set -euo pipefail
+cd "$(dirname "$(readlink -f "$0")")"
+
+cmd="${1:-ps}"
+[[ $# -gt 0 ]] && shift || true
+
+targets=(); extra=()
+for a in "$@"; do
+    if [[ $a == -* ]]; then extra+=("$a"); else targets+=("$a"); fi
+done
+if [[ ${#targets[@]} -eq 0 || "${targets[0]:-}" == "all" ]]; then
+    mapfile -t targets < <(find stacks -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort)
+fi
+# sensible defaults
+if [[ $cmd == up && ${#extra[@]} -eq 0 ]]; then extra=(-d); fi
+if [[ $cmd == logs ]]; then extra+=(--tail 50); fi
+
+set -a
+# shellcheck disable=SC1091
+[[ -f .env.shared ]] && source .env.shared
+set +a
+
+for s in "${targets[@]}"; do
+    if [[ ! -f "stacks/$s/compose.yml" ]]; then
+        echo "== $s: skipped (no compose.yml)"
+        continue
+    fi
+    echo "== $s: docker compose $cmd ${extra[*]}"
+    docker compose -f "stacks/$s/compose.yml" "$cmd" "${extra[@]}"
+done

@@ -1,0 +1,134 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+
+- Media:
+      - Jellyfin:
+            icon: jellyfin
+            href: https://jellyfin.mnau.org/
+            widget:
+                type: jellyfin
+                url: http://jellyfin:8096
+                key: "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}"
+                version: 2 # optional, default is 1
+                enableBlocks: true # optional, defaults to false
+                enableNowPlaying: true # optional, defaults to true
+                enableUser: true # optional, defaults to false
+                enableMediaControl: false # optional, defaults to true
+                showEpisodeNumber: true # optional, defaults to false
+                expandOneStreamToTwoRows: false # optional, defaults to true
+
+      - Audiobookshelf:
+            icon: audiobookshelf.svg
+            href: https://audiobookshelf.mnau.org/
+            widget:
+                type: audiobookshelf
+                url: http://audiobookshelf:80
+                key: "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_API_KEY}}"
+                fields: ["books", "booksDuration"]
+
+
+      - LiteLLM:
+            icon: litellm.svg
+            href: https://ai.mnau.org/
+
+      - Dockhand:
+            icon: dockhand
+            href: https://dockhand.mnau.org/
+            widget:
+                  type: dockhand
+                  url: https://dockhand.mnau.org
+                  key: "{{HOMEPAGE_VAR_DOCKHAND_KEY}}"
+
+
+- Downloads:
+      - qBittorrent:
+            icon: qbittorrent.svg
+            href: https://qbittorrent.mnau.org/
+            widget:
+                type: qbittorrent
+                url: http://qbittorrent:49666
+                username: admin
+                password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
+
+      - MyAnonaMouse:
+          icon: https://sas.myanonamouse.net/favicon-32x32.png?v=b
+          href: https://www.myanonamouse.net/
+
+
+- Tools:
+      - FreshRSS:
+            icon: freshrss.svg
+            href: https://freshrss.mnau.org/
+            widget:
+                type: freshrss
+                url: http://freshrss:80
+                username: admin
+                password: "{{HOMEPAGE_VAR_FRESHRSS_PASSWORD}}"
+
+      - The Lounge - IRC Client:
+            icon: thelounge.svg
+            href: https://thelounge.mnau.org/
+            container: thelounge
+
+
+
+      - Paperless-ngx:
+            icon: paperless.svg
+            href: https://paperless.mnau.org/
+            widget:
+                type: paperlessngx
+                url: http://paperless:8000
+                username: void
+                password: "{{HOMEPAGE_VAR_PAPERLESS_PASSWORD}}"
+
+      - Pangolin:
+            icon: pangolin.svg
+            href: https://pangolin.mnau.org/
+
+
+      - BentoPDF:
+            icon: bentopdf.svg
+            href: https://pdf.mnau.org/
+            container: bentopdf
+
+      - Forgejo:
+            icon: forgejo.svg
+            href: https://forgejo.mnau.org/
+            container: forgejo
+
+      - Vaultwarden:
+            icon: vaultwarden.svg
+            href: https://vaultwarden.mnau.org/
+            container: vaultwarden
+
+      - SearXNG:
+            icon: searxng.svg
+            href: https://search.mnau.org/
+            container: searxng
+
+
+- Infrastructure:
+      - Meow:
+            icon: proxmox.png
+            href: https://meow:8006
+            widget:
+                type: proxmox
+                url: https://192.168.0.111:8006
+                username: api@pam!homepage
+                password: "{{HOMEPAGE_VAR_PROXMOX_PASSWORD}}"
+                node: Meow
+                fields: ["vms", "lxc", "resources.cpu", "resources.mem"]
+
+      - Discord Bot:
+            icon: discord.svg
+            container: discord-bot
+
+      - Samba:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/samba-server.svg
+            container: samba
+
+      - Blog:
+          icon: sh-hugo
+          href: https://blog.mnau.org/
+          container: hugo

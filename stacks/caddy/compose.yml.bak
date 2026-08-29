@@ -1,0 +1,27 @@
+# stacks/caddy/compose.yml
+services:
+  caddy:
+    build: .
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "${TAILSCALE_IP}:80:80"
+      - "${TAILSCALE_IP}:443:443"
+      - "${TAILSCALE_IP}:443:443/udp"
+    env_file:
+      - .env
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/data:/data
+      - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/config:/config
+      - ../hugo/site/public:/var/www/hugo:ro
+      - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/logs:/var/log/caddy
+    networks:
+      - proxy
+      - public
+
+networks:
+  proxy:
+    external: true
+  public:
+    external: true

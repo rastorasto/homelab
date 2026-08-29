@@ -1,0 +1,19 @@
+# Secrets
+**/.env
+**/.env.*
+**/*.key
+**/*.pem
+!**/.env.example
+!.env.shared.example
+
+# Runtime state lives outside the repo (see .env.shared DOCKER_DATA).
+# Only local scratch files are ignored here:
+**/.DS_Store
+**/logs/
+
+# Generated Hugo output
+stacks/hugo/site/public/
+stacks/hugo/site/resources/_gen/
+
+# SearXNG generated config (contains secret_key) - use .example as template
+stacks/searxng/config/settings.yml

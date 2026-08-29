@@ -1,0 +1,17 @@
+services:
+  dockhand:
+    image: fnsys/dockhand:latest
+    container_name: dockhand
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_DATA:-/home/meow/docker-data}/dockhand/data:/app/data
+      - /mnt/data/backup:/mnt/data/backup
+    environment:
+      - FEAT_BACKUPS_ENABLED=true
+
+networks:
+  proxy:
+    external: true

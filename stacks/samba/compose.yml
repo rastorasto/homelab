@@ -1,0 +1,24 @@
+services:
+    samba:
+        image: dockurr/samba
+        container_name: samba
+        restart: unless-stopped
+        environment:
+            NAME: "Meow"
+            USER: "void"
+            PASS: "${SAMBA_PASSWORD}"
+        ports:
+            - ${TAILSCALE_IP}:445:445
+        networks:
+            - proxy
+        volumes:
+            - /home/meow:/storage/meow
+            - /mnt/data:/storage/data
+            - /mnt/data/torrents/media:/storage/media
+            - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/consume:/storage/paperless-inbox
+            - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/export:/storage/paperless-export
+            - /home/meow/docker/stacks/hugo/site/content:/storage/hugo-content
+
+networks:
+    proxy:
+        external: true

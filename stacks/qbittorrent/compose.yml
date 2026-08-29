@@ -1,0 +1,23 @@
+services:
+    qbittorrent:
+        image: lscr.io/linuxserver/qbittorrent:latest
+        container_name: qbittorrent
+        restart: unless-stopped
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Prague
+            - WEBUI_PORT=49666
+        volumes:
+            - ${DOCKER_DATA:-/home/meow/docker-data}/qbittorrent/config:/config
+            - /mnt/data/torrents:/downloads
+        networks:
+            - proxy
+        # disabled auto update to not break mam rules
+        labels:
+            com.centurylinklabs.watchtower.enable: false
+            dockhand.update: false
+
+networks:
+    proxy:
+        external: true

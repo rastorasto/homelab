@@ -1,0 +1,14 @@
+services:
+  hugo:
+    image: ghcr.io/gohugoio/hugo:latest
+    container_name: hugo
+    restart: unless-stopped
+    working_dir: /project
+    command:
+      - build
+      - --watch
+      - --cleanDestinationDir
+      - --destination
+      - /project/public
+    volumes:
+      - ./site:/project

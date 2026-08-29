@@ -1,0 +1,21 @@
+services:
+    discord-bot:
+        image: meowtainers-discord-bot
+        build: ./src/
+        container_name: discord-bot
+        restart: unless-stopped
+        volumes:
+            - ./src:/app
+        networks:
+            - proxy
+        labels:
+            - "com.centurylinklabs.watchtower.enable=false"
+            - "dockhand.update=false"
+        env_file:
+            - .env
+        environment:
+            - DISCORD_TOKEN=${DISCORD_TOKEN}
+
+networks:
+    proxy:
+        external: true

@@ -1,0 +1,17 @@
+services:
+    freshrss:
+        image: freshrss/freshrss:latest
+        container_name: freshrss
+        restart: unless-stopped
+        environment:
+            - TZ=Europe/Prague
+            - CRON_MIN=1,31
+        networks:
+            - proxy
+        volumes:
+            - ${DOCKER_DATA:-/home/meow/docker-data}/freshrss/data:/var/www/FreshRSS/data
+            - ${DOCKER_DATA:-/home/meow/docker-data}/freshrss/extensions:/var/www/FreshRSS/extensions
+
+networks:
+    proxy:
+        external: true

@@ -1,0 +1,15 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://vaultwarden.mnau.org"
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/vaultwarden/data:/data/
+    networks:
+      - proxy
+
+networks:
+    proxy:
+        external: true

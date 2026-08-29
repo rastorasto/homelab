@@ -1,0 +1,139 @@
+{
+	email rastislavuhliar123@gmail.com
+}
+
+*.{$DOMAIN} {
+	log {
+		output file /var/log/caddy/private-access.log {
+			roll_size 20MiB
+			roll_keep 10
+			roll_keep_for 720h
+		}
+		format json
+	}
+
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+
+	@jellyfin host jellyfin.{$DOMAIN}
+	handle @jellyfin {
+		reverse_proxy jellyfin:8096
+	}
+
+	@qbittorrent host qbittorrent.{$DOMAIN}
+	handle @qbittorrent {
+		reverse_proxy qbittorrent:49666
+	}
+
+	@freshRSS host freshrss.{$DOMAIN}
+	handle @freshRSS {
+		reverse_proxy freshrss
+	}
+
+	@homepage host homepage.{$DOMAIN}
+	handle @homepage {
+		reverse_proxy homepage:3000
+	}
+
+	@audiobookshelf host audiobookshelf.{$DOMAIN}
+	handle @audiobookshelf {
+		reverse_proxy audiobookshelf:80
+	}
+
+	@abs host abs.{$DOMAIN}
+	handle @abs {
+		reverse_proxy audiobookshelf
+	}
+
+	@thelounge host thelounge.{$DOMAIN}
+	handle @thelounge {
+		reverse_proxy thelounge:9000
+	}
+
+	@paperless host paperless.{$DOMAIN}
+	handle @paperless {
+		reverse_proxy paperless:8000
+	}
+
+	@pdf host pdf.{$DOMAIN}
+	handle @pdf {
+		reverse_proxy bentopdf:8080
+	}
+
+	@forgejo host forgejo.{$DOMAIN}
+	handle @forgejo {
+		reverse_proxy forgejo:3000
+	}
+
+	@vaultwarden host vaultwarden.{$DOMAIN}
+	handle @vaultwarden {
+		reverse_proxy vaultwarden
+	}
+
+	@search host search.{$DOMAIN}
+	handle @search {
+		reverse_proxy searxng:8080
+	}
+
+	@dockhand host dockhand.{$DOMAIN}
+	handle @dockhand {
+		reverse_proxy dockhand:3000
+	}
+
+	@ai host ai.{$DOMAIN}
+	handle @ai {
+		reverse_proxy litellm:4000
+	}
+
+	@meow host meow.{$DOMAIN}
+	handle @meow {
+		reverse_proxy https://192.168.0.111:8006 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+
+	@squeak host squeak.{$DOMAIN}
+	handle @squeak {
+		reverse_proxy https://192.168.0.222:8006 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+}
+
+:8081 {
+	log {
+		output file /var/log/caddy/public-access.log {
+			roll_size 20MiB
+			roll_keep 10
+			roll_keep_for 720h
+		}
+		format json
+	}
+
+	@blog host blog.{$DOMAIN}
+	handle @blog {
+		root * /srv/blog
+		file_server
+	}
+
+	@counter host counter.{$DOMAIN}
+	handle @counter {
+		@allowed path /@mnaublog
+		handle @allowed {
+			reverse_proxy moe-counter:3000
+		}
+
+		handle {
+			respond "Not found" 404
+		}
+	}
+
+	handle {
+		respond "Not found" 404
+	}
+}

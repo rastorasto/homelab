@@ -1,0 +1,19 @@
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      - proxy
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/searxng/config:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=https://search.mnau.org/
+
+networks:
+  proxy:
+    external: true

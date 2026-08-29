@@ -1,0 +1,41 @@
+services:
+  litellm:
+    image: docker.litellm.ai/berriai/litellm:main-stable
+    container_name: litellm
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    env_file:
+      - .env
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    command:
+      - "--config"
+      - "/app/config.yaml"
+      - "--port"
+      - "4000"
+    networks:
+      - proxy
+
+  db:
+    image: postgres:16
+    container_name: litellm-db
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/litellm/postgres:/var/lib/postgresql/data
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,16 @@
+services:
+    audiobookshelf:
+        image: ghcr.io/advplyr/audiobookshelf:latest
+        container_name: audiobookshelf
+        restart: unless-stopped
+        networks:
+            - proxy
+        volumes:
+            - /mnt/data/torrents/audiobooks:/audiobooks
+            - /mnt/data/torrents/podcasts:/podcasts
+            - ${DOCKER_DATA:-/home/meow/docker-data}/audiobookshelf/config:/config
+            - ${DOCKER_DATA:-/home/meow/docker-data}/audiobookshelf/metadata:/metadata
+
+networks:
+    proxy:
+        external: true

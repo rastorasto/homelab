@@ -1,0 +1,7 @@
+discord.py
+python-dotenv
+requests
+aiofiles
+asyncio
+aiohttp
+deluge-client

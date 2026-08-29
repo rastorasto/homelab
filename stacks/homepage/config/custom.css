@@ -1,0 +1,42 @@
+/*body,
+#background,
+#__next {
+    background-color: #000000 !important;
+    background-image: none !important;
+}
+.card,
+div[class*="bg-stone-"],
+div[class*="bg-neutral-"],
+div[class*="rounded-"] {
+    background-color: rgba(20, 20, 20, 0.6) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}*/
+
+body,
+#background,
+#__next {
+    background-color: rgb(28, 27, 33) !important;
+    background-image: none !important;
+}
+.card,
+div[class*="grid"] > div[class*="bg-"],
+div[class*="flex"] > div[class*="bg-neutral-"] {
+    background-color: rgba(38, 37, 45, 0.45) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(150, 140, 180, 0.08) !important;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.03) !important;
+    transition: all 0.25s ease-in-out !important;
+}
+.card:hover,
+div[class*="grid"] > div[class*="bg-"]:hover,
+div[class*="flex"] > div[class*="bg-neutral-"]:hover {
+    transform: translateY(-2px) !important;
+    background-color: rgba(45, 43, 53, 0.6) !important;
+    border: 1px solid rgba(168, 85, 247, 0.25) !important;
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.08) !important;
+}

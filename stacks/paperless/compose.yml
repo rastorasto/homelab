@@ -1,0 +1,34 @@
+services:
+  broker:
+    image: docker.io/valkey/valkey:9-alpine
+    container_name: paperless-broker
+    restart: unless-stopped
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/redis:/data
+    networks:
+      - paperless-internal
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    depends_on:
+      - broker
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/data:/usr/src/paperless/data
+      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/media:/usr/src/paperless/media
+      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/export:/usr/src/paperless/export
+      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/consume:/usr/src/paperless/consume
+    networks:
+      - paperless-internal
+      - proxy
+    env_file:
+      - .env
+
+networks:
+  paperless-internal:
+  proxy:
+    external: true

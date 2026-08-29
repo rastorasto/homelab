@@ -1,0 +1,18 @@
+services:
+    homepage:
+        image: ghcr.io/gethomepage/homepage:latest
+        container_name: homepage
+        restart: unless-stopped
+        volumes:
+            - ./config:/app/config
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        networks:
+            - proxy
+        env_file:
+            - .env
+        environment:
+            HOMEPAGE_ALLOWED_HOSTS: "homepage.mnau.org"
+
+networks:
+  proxy:
+    external: true

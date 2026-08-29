@@ -1,0 +1,36 @@
+services:
+    caddy:
+        image: meowtainers-caddy
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: caddy
+        ports:
+          # public edge target (pangolin/cloudflared legacy); kept for Phase 4 removal
+          - "127.0.0.1:8081:8081"
+          # tailscale
+          - "${TAILSCALE_IP}:80:80"
+          - "${TAILSCALE_IP}:443:443"
+          - "${TAILSCALE_IP}:443:443/udp"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile:ro
+            - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/data:/data
+            - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/config:/config
+            - ../hugo/site/public:/srv/blog:ro # hugo blog
+            - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/logs:/var/log/caddy
+        environment:
+            - CLOUDFLARE_API_TOKEN=${CF_API_TOKEN}
+            - DOMAIN=${DOMAIN_NAME}
+        networks:
+            - proxy
+            - public
+        restart: unless-stopped
+        labels:
+            - "com.centurylinklabs.watchtower.enable=false"
+            - "dockhand.update=false"
+
+networks:
+    proxy:
+        external: true
+    public:
+        external: true

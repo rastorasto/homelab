@@ -1,0 +1,19 @@
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:16
+    container_name: forgejo
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/forgejo/data:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+        - proxy
+    ports:
+      - '${TAILSCALE_IP}:222:22'
+
+networks:
+    proxy:
+        external: true

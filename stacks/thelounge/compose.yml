@@ -1,0 +1,15 @@
+services:
+    thelounge:
+        image: ghcr.io/thelounge/thelounge:latest
+        container_name: thelounge
+        restart: unless-stopped
+        networks:
+            - proxy
+        volumes:
+            - ${DOCKER_DATA:-/home/meow/docker-data}/thelounge/data:/var/opt/thelounge
+        environment:
+            - THELOUNGE_HOME=/var/opt/thelounge
+
+networks:
+  proxy:
+    external: true
