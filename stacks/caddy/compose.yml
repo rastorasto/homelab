@@ -5,6 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile
         container_name: caddy
+        command: caddy docker-proxy --caddyfile-path /etc/caddy/Caddyfile
         ports:
           # public edge target (pangolin/cloudflared legacy); kept for Phase 4 removal
           - "127.0.0.1:8081:8081"
