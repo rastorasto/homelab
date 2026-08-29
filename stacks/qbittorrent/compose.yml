@@ -17,6 +17,8 @@ services:
         labels:
             com.centurylinklabs.watchtower.enable: false
             dockhand.update: false
+            caddy: qbittorrent.${DOMAIN_NAME:-mnau.org}
+            caddy.reverse_proxy: "{{upstreams 49666}}"
 
 networks:
     proxy:

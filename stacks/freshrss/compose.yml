@@ -3,6 +3,9 @@ services:
         image: freshrss/freshrss:latest
         container_name: freshrss
         restart: unless-stopped
+        labels:
+            caddy: freshrss.${DOMAIN_NAME:-mnau.org}
+            caddy.reverse_proxy: "{{upstreams 80}}"
         environment:
             - TZ=Europe/Prague
             - CRON_MIN=1,31

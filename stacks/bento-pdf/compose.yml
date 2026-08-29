@@ -3,6 +3,9 @@ services:
     image: ghcr.io/alam00000/bentopdf-simple:latest
     container_name: bentopdf
     restart: unless-stopped
+    labels:
+      caddy: pdf.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
     networks:
       - proxy
 

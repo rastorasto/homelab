@@ -15,6 +15,9 @@ services:
       resources:
         limits:
           memory: 2G
+    labels:
+      caddy: paperless.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 8000}}"
     depends_on:
       - broker
     volumes:

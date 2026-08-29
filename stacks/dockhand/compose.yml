@@ -3,6 +3,9 @@ services:
     image: fnsys/dockhand:latest
     container_name: dockhand
     restart: unless-stopped
+    labels:
+      caddy: dockhand.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - proxy
     volumes:

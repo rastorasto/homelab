@@ -42,7 +42,14 @@ Keep a copy of every `.env` (and the restic password) in vaultwarden.
 ./lab logs caddy -f
 ```
 
-Adding a service = new `stacks/<name>/compose.yml` + route entry in `stacks/caddy/Caddyfile`.
+Adding a service = new `stacks/<name>/compose.yml` with caddy labels:
+```yaml
+labels:
+  caddy: myservice.${DOMAIN_NAME:-mnau.org}
+  caddy.reverse_proxy: "{{upstreams 8080}}"
+```
+The route appears/disappears with the container (caddy-docker-proxy); no central file to edit.
+Non-docker targets (e.g. Proxmox UIs) and the public `:8081` block live in `stacks/caddy/Caddyfile`.
 Removing = `./lab down <name>` and delete the dir. Data is state under `$DOCKER_DATA/<name>`.
 
 Delete nothing under `$DOCKER_DATA` unless you mean it — there is no second copy

@@ -2,6 +2,13 @@
 	email rastislavuhliar123@gmail.com
 }
 
+# Routes for docker services are generated from container labels
+# (caddy-docker-proxy). This file is the merged base config:
+#   - wildcard catch-all (keeps the *.mnau.org cert renewed via DNS-01
+#     and 404s unknown/dead subdomains)
+#   - routes to non-docker targets (Proxmox nodes)
+#   - the legacy public :8081 listener (blog + counter, Phase 4 removes)
+
 *.{$DOMAIN} {
 	log {
 		output file /var/log/caddy/private-access.log {
@@ -16,91 +23,21 @@
 		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 	}
 
-	@jellyfin host jellyfin.{$DOMAIN}
-	handle @jellyfin {
-		reverse_proxy jellyfin:8096
-	}
+	respond "Not found" 404
+}
 
-	@qbittorrent host qbittorrent.{$DOMAIN}
-	handle @qbittorrent {
-		reverse_proxy qbittorrent:49666
-	}
-
-	@freshRSS host freshrss.{$DOMAIN}
-	handle @freshRSS {
-		reverse_proxy freshrss
-	}
-
-	@homepage host homepage.{$DOMAIN}
-	handle @homepage {
-		reverse_proxy homepage:3000
-	}
-
-	@audiobookshelf host audiobookshelf.{$DOMAIN}
-	handle @audiobookshelf {
-		reverse_proxy audiobookshelf:80
-	}
-
-	@abs host abs.{$DOMAIN}
-	handle @abs {
-		reverse_proxy audiobookshelf
-	}
-
-	@thelounge host thelounge.{$DOMAIN}
-	handle @thelounge {
-		reverse_proxy thelounge:9000
-	}
-
-	@paperless host paperless.{$DOMAIN}
-	handle @paperless {
-		reverse_proxy paperless:8000
-	}
-
-	@pdf host pdf.{$DOMAIN}
-	handle @pdf {
-		reverse_proxy bentopdf:8080
-	}
-
-	@forgejo host forgejo.{$DOMAIN}
-	handle @forgejo {
-		reverse_proxy forgejo:3000
-	}
-
-	@vaultwarden host vaultwarden.{$DOMAIN}
-	handle @vaultwarden {
-		reverse_proxy vaultwarden
-	}
-
-	@search host search.{$DOMAIN}
-	handle @search {
-		reverse_proxy searxng:8080
-	}
-
-	@dockhand host dockhand.{$DOMAIN}
-	handle @dockhand {
-		reverse_proxy dockhand:3000
-	}
-
-	@ai host ai.{$DOMAIN}
-	handle @ai {
-		reverse_proxy litellm:4000
-	}
-
-	@meow host meow.{$DOMAIN}
-	handle @meow {
-		reverse_proxy https://192.168.0.111:8006 {
-			transport http {
-				tls_insecure_skip_verify
-			}
+meow.{$DOMAIN} {
+	reverse_proxy https://192.168.0.111:8006 {
+		transport http {
+			tls_insecure_skip_verify
 		}
 	}
+}
 
-	@squeak host squeak.{$DOMAIN}
-	handle @squeak {
-		reverse_proxy https://192.168.0.222:8006 {
-			transport http {
-				tls_insecure_skip_verify
-			}
+squeak.{$DOMAIN} {
+	reverse_proxy https://192.168.0.222:8006 {
+		transport http {
+			tls_insecure_skip_verify
 		}
 	}
 }

@@ -4,6 +4,9 @@ services:
         container_name: jellyfin
         user: 1000:1000
         restart: unless-stopped
+        labels:
+            caddy: jellyfin.${DOMAIN_NAME:-mnau.org}
+            caddy.reverse_proxy: "{{upstreams 8096}}"
         networks:
             - proxy
         volumes:

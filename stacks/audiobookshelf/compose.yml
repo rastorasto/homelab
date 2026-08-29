@@ -3,6 +3,11 @@ services:
         image: ghcr.io/advplyr/audiobookshelf:latest
         container_name: audiobookshelf
         restart: unless-stopped
+        labels:
+            caddy: audiobookshelf.${DOMAIN_NAME:-mnau.org}
+            caddy.reverse_proxy: "{{upstreams 80}}"
+            caddy_1: abs.${DOMAIN_NAME:-mnau.org}
+            caddy_1.reverse_proxy: "{{upstreams 80}}"
         networks:
             - proxy
         volumes:

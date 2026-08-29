@@ -7,6 +7,9 @@ services:
       resources:
         limits:
           memory: 1G
+    labels:
+      caddy: search.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
     networks:
       - proxy
     volumes:

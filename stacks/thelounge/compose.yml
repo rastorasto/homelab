@@ -3,6 +3,9 @@ services:
         image: ghcr.io/thelounge/thelounge:latest
         container_name: thelounge
         restart: unless-stopped
+        labels:
+            caddy: thelounge.${DOMAIN_NAME:-mnau.org}
+            caddy.reverse_proxy: "{{upstreams 9000}}"
         networks:
             - proxy
         volumes:

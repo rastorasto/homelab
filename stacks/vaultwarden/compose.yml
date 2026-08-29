@@ -5,6 +5,9 @@ services:
     restart: unless-stopped
     environment:
       DOMAIN: "https://vaultwarden.mnau.org"
+    labels:
+      caddy: vaultwarden.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 80}}"
     volumes:
       - ${DOCKER_DATA:-/home/meow/docker-data}/vaultwarden/data:/data/
     networks:

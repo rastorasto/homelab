@@ -7,6 +7,9 @@ services:
       resources:
         limits:
           memory: 2G
+    labels:
+      caddy: ai.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 4000}}"
     env_file:
       - .env
     volumes:

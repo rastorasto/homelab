@@ -3,6 +3,9 @@ services:
     image: codeberg.org/forgejo/forgejo:16
     container_name: forgejo
     restart: unless-stopped
+    labels:
+      caddy: forgejo.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
     environment:
       - USER_UID=1000
       - USER_GID=1000
