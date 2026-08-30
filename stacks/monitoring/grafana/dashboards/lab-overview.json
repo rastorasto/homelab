@@ -146,5 +146,37 @@
      "targets": [{"expr": "8 * rate(node_network_transmit_bytes_total{job=~\"node-.+\",device!~\"lo|docker.*|veth.*|tailscale.*\"}[5m])", "legendFormat": "{{job}} {{device}}", "format": "time_series"}],
      "fieldConfig": {"defaults": {"unit": "bps", "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 15, "showPoints": "never", "spanNulls": false}}},
      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}}
+    ,
+    {"type": "row", "id": 103, "title": "Public & security (VPS)", "gridPos": {"x": 0, "y": 50, "w": 24, "h": 1}, "collapsed": false, "panels": []},
+
+    {"id": 40, "type": "stat", "title": "fail2ban banned IPs (sshd)", "datasource": {"type": "prometheus"},
+     "gridPos": {"x": 0, "y": 51, "w": 6, "h": 4},
+     "targets": [{"expr": "fail2ban_banned_ips", "format": "time_series"}],
+     "fieldConfig": {"defaults": {"unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 100}, {"color": "red", "value": 500}]}, "color": {"mode": "thresholds"}}, "overrides": []},
+     "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "textMode": "value", "orientation": "auto", "justifyMode": "auto", "showPercentChange": false}},
+
+    {"id": 41, "type": "stat", "title": "crowdsec active bans (by origin)", "datasource": {"type": "prometheus"},
+     "gridPos": {"x": 6, "y": 51, "w": 10, "h": 4},
+     "targets": [{"expr": "cs_active_decisions", "legendFormat": "{{origin}} {{reason}}", "format": "time_series"}],
+     "fieldConfig": {"defaults": {"unit": "short", "color": {"mode": "thresholds"}, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]}}, "overrides": []},
+     "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "none", "textMode": "value_and_name", "orientation": "vertical", "justifyMode": "center", "showPercentChange": false}},
+
+    {"id": 42, "type": "timeseries", "title": "Public HTTP requests/s by status (traefik)", "datasource": {"type": "prometheus"},
+     "gridPos": {"x": 16, "y": 51, "w": 8, "h": 8},
+     "targets": [{"expr": "sum by (code) (rate(traefik_entrypoint_requests_total[5m]))", "legendFormat": "{{code}}", "format": "time_series"}],
+     "fieldConfig": {"defaults": {"unit": "reqps", "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 20, "showPoints": "never", "spanNulls": false}}},
+     "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}},
+
+    {"id": 43, "type": "timeseries", "title": "Fail & ban activity", "datasource": {"type": "prometheus"},
+     "gridPos": {"x": 0, "y": 55, "w": 8, "h": 4},
+     "targets": [{"expr": "fail2ban_failed_attempts_total", "legendFormat": "total failed", "format": "time_series"}],
+     "fieldConfig": {"defaults": {"unit": "short", "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 20, "showPoints": "never"}}},
+     "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}},
+
+    {"id": 44, "type": "timeseries", "title": "crowdsec lines parsed/s", "datasource": {"type": "prometheus"},
+     "gridPos": {"x": 8, "y": 55, "w": 8, "h": 4},
+     "targets": [{"expr": "rate(cs_parsers_paths_processed_eps[5m])", "legendFormat": "{{job}}", "format": "time_series"}],
+     "fieldConfig": {"defaults": {"unit": "short", "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 20, "showPoints": "never"}}},
+     "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}}
   ]
 }

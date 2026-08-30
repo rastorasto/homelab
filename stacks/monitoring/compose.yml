@@ -109,6 +109,25 @@ services:
     networks:
       - proxy
 
+  mtail:
+    image: ghcr.io/google/mtail:latest
+    container_name: mtail
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 96M
+    networks:
+      - proxy
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/logs:/logs:ro
+      - ./mtail:/progs:ro
+    command:
+      - --progs=/progs
+      - --logs=/logs/private-access.log
+      - --poll_interval=10s
+      - --port=3903
+
 networks:
   proxy:
     external: true

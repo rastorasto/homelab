@@ -19,3 +19,11 @@ groups:
           severity: warning
         annotations:
           summary: "scrape target down: {{ $labels.job }}"
+
+      - alert: LaptopOnBattery
+        expr: node_power_supply_online{job="node-pve"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "meow (PVE laptop) is running on battery"
