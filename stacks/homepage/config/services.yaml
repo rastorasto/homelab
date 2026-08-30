@@ -27,9 +27,14 @@
                 fields: ["books", "booksDuration"]
 
       - LiteLLM:
-            icon: litellm.svg
+            icon: openai.svg
             href: https://ai.mnau.org/
             container: litellm
+
+      - LLM endpoint status:
+            icon: uptime-kuma.svg
+            href: https://llm.ai.e-infra.cz/status/
+            description: Metacentrum
 
       - Dockhand:
             icon: dockhand
