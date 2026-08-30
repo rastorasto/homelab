@@ -1,18 +1,21 @@
 ---
-# For configuration options and examples, please see:
-# https://gethomepage.dev/configs/bookmarks
+# Bookmarks: https://gethomepage.dev/configs/bookmarks
 
-# - Developer:
-#     - Github:
-#         - abbr: GH
-#           href: https://github.com/
+- Dev:
+      - Forgejo:
+            - abbr: FG
+              href: https://forgejo.mnau.org/
+      - GitHub:
+            - abbr: GH
+              href: https://github.com/
 
-# - Social:
-#     - Reddit:
-#         - abbr: RE
-#           href: https://reddit.com/
-
-# - Entertainment:
-#     - YouTube:
-#         - abbr: YT
-#           href: https://youtube.com/
+- Cloud:
+      - Oracle Cloud:
+            - abbr: OC
+              href: https://cloud.oracle.com/
+      - Cloudflare:
+            - abbr: CF
+              href: https://dash.cloudflare.com/
+      - Tailscale:
+            - abbr: TS
+              href: https://login.tailscale.com/admin/machines

@@ -1,6 +1,5 @@
 ---
-# For configuration options and examples, please see:
-# https://gethomepage.dev/configs/services/
+# Service layout: https://gethomepage.dev/configs/services/
 
 - Media:
       - Jellyfin:
@@ -10,13 +9,13 @@
                 type: jellyfin
                 url: http://jellyfin:8096
                 key: "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}"
-                version: 2 # optional, default is 1
-                enableBlocks: true # optional, defaults to false
-                enableNowPlaying: true # optional, defaults to true
-                enableUser: true # optional, defaults to false
-                enableMediaControl: false # optional, defaults to true
-                showEpisodeNumber: true # optional, defaults to false
-                expandOneStreamToTwoRows: false # optional, defaults to true
+                version: 2
+                enableBlocks: true
+                enableNowPlaying: true
+                enableUser: true
+                enableMediaControl: false
+                showEpisodeNumber: true
+                expandOneStreamToTwoRows: false
 
       - Audiobookshelf:
             icon: audiobookshelf.svg
@@ -26,20 +25,6 @@
                 url: http://audiobookshelf:80
                 key: "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_API_KEY}}"
                 fields: ["books", "booksDuration"]
-
-
-      - LiteLLM:
-            icon: litellm.svg
-            href: https://ai.mnau.org/
-
-      - Dockhand:
-            icon: dockhand
-            href: https://dockhand.mnau.org/
-            widget:
-                  type: dockhand
-                  url: https://dockhand.mnau.org
-                  key: "{{HOMEPAGE_VAR_DOCKHAND_KEY}}"
-
 
 - Downloads:
       - qBittorrent:
@@ -52,9 +37,8 @@
                 password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
 
       - MyAnonaMouse:
-          icon: https://sas.myanonamouse.net/favicon-32x32.png?v=b
-          href: https://www.myanonamouse.net/
-
+            icon: https://sas.myanonamouse.net/favicon-32x32.png?v=b
+            href: https://www.myanonamouse.net/
 
 - Tools:
       - FreshRSS:
@@ -66,14 +50,12 @@
                 username: admin
                 password: "{{HOMEPAGE_VAR_FRESHRSS_PASSWORD}}"
 
-      - The Lounge - IRC Client:
+      - The Lounge:
             icon: thelounge.svg
             href: https://thelounge.mnau.org/
             container: thelounge
 
-
-
-      - Paperless-ngx:
+      - Paperless:
             icon: paperless.svg
             href: https://paperless.mnau.org/
             widget:
@@ -82,36 +64,55 @@
                 username: void
                 password: "{{HOMEPAGE_VAR_PAPERLESS_PASSWORD}}"
 
-      - Pangolin:
-            icon: pangolin.svg
-            href: https://pangolin.mnau.org/
-
+      - SearXNG:
+            icon: searxng.svg
+            href: https://search.mnau.org/
+            container: searxng
 
       - BentoPDF:
             icon: bentopdf.svg
             href: https://pdf.mnau.org/
             container: bentopdf
 
-      - Forgejo:
-            icon: forgejo.svg
-            href: https://forgejo.mnau.org/
-            container: forgejo
-
       - Vaultwarden:
             icon: vaultwarden.svg
             href: https://vaultwarden.mnau.org/
             container: vaultwarden
 
-      - SearXNG:
-            icon: searxng.svg
-            href: https://search.mnau.org/
-            container: searxng
+- Code & AI:
+      - Forgejo:
+            icon: forgejo.svg
+            href: https://forgejo.mnau.org/
+            container: forgejo
 
+      - LiteLLM:
+            icon: litellm.svg
+            href: https://ai.mnau.org/
+            container: litellm
+
+- Monitoring:
+      - Grafana:
+            icon: grafana.svg
+            href: https://grafana.mnau.org/
+            container: grafana
+
+      - Prometheus:
+            icon: prometheus.svg
+            href: https://prometheus.mnau.org/
+            container: prometheus
+
+      - Dockhand:
+            icon: dockhand
+            href: https://dockhand.mnau.org/
+            widget:
+                type: dockhand
+                url: https://dockhand.mnau.org
+                key: "{{HOMEPAGE_VAR_DOCKHAND_KEY}}"
 
 - Infrastructure:
-      - Meow:
+      - Meow (PVE):
             icon: proxmox.png
-            href: https://meow:8006
+            href: https://meow.mnau.org/
             widget:
                 type: proxmox
                 url: https://192.168.0.111:8006
@@ -120,15 +121,29 @@
                 node: Meow
                 fields: ["vms", "lxc", "resources.cpu", "resources.mem"]
 
-      - Discord Bot:
-            icon: discord.svg
-            container: discord-bot
+      - Squeak (PVE):
+            icon: proxmox.png
+            href: https://squeak.mnau.org/
+            description: offline
+
+      - Pangolin (VPS):
+            icon: pangolin.svg
+            href: https://pangolin.mnau.org/
 
       - Samba:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/samba-server.svg
             container: samba
 
+      - Discord Bot:
+            icon: discord.svg
+            container: discord-bot
+
+- Links:
       - Blog:
-          icon: sh-hugo
-          href: https://blog.mnau.org/
-          container: hugo
+            icon: sh-hugo
+            href: https://blog.mnau.org/
+            container: hugo
+
+      - Counter:
+            href: https://counter.mnau.org/@mnaublog
+            description: moe-counter

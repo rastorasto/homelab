@@ -1,20 +1,12 @@
 ---
-# For configuration options and examples, please see:
-# https://gethomepage.dev/configs/info-widgets/
+# Info widgets: https://gethomepage.dev/configs/info-widgets/
 
 - resources:
       cpu: true
       memory: true
       disk: /
-# - docker:
-#       server: my-docker
-#       label: Containers
-#       running: true
-# - datetime:
-#       text_size: sm
-#       format:
-#           timeStyle: short
-#           dateStyle: short
-# - search:
-#     provider: duckduckgo
-#     target: _blank
+
+- search:
+      provider: searxng
+      url: https://search.mnau.org/
+      target: _blank
