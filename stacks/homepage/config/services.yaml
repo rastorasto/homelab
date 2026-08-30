@@ -26,6 +26,19 @@
                 key: "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_API_KEY}}"
                 fields: ["books", "booksDuration"]
 
+      - LiteLLM:
+            icon: litellm.svg
+            href: https://ai.mnau.org/
+            container: litellm
+
+      - Dockhand:
+            icon: dockhand
+            href: https://dockhand.mnau.org/
+            widget:
+                type: dockhand
+                url: https://dockhand.mnau.org
+                key: "{{HOMEPAGE_VAR_DOCKHAND_KEY}}"
+
 - Downloads:
       - qBittorrent:
             icon: qbittorrent.svg
@@ -79,35 +92,14 @@
             href: https://vaultwarden.mnau.org/
             container: vaultwarden
 
-- Code & AI:
       - Forgejo:
             icon: forgejo.svg
             href: https://forgejo.mnau.org/
             container: forgejo
 
-      - LiteLLM:
-            icon: litellm.svg
-            href: https://ai.mnau.org/
-            container: litellm
-
-- Monitoring:
-      - Grafana:
-            icon: grafana.svg
-            href: https://grafana.mnau.org/
-            container: grafana
-
-      - Prometheus:
-            icon: prometheus.svg
-            href: https://prometheus.mnau.org/
-            container: prometheus
-
-      - Dockhand:
-            icon: dockhand
-            href: https://dockhand.mnau.org/
-            widget:
-                type: dockhand
-                url: https://dockhand.mnau.org
-                key: "{{HOMEPAGE_VAR_DOCKHAND_KEY}}"
+      - Pangolin:
+            icon: pangolin.svg
+            href: https://pangolin.mnau.org/
 
 - Infrastructure:
       - Meow (PVE):
@@ -121,14 +113,15 @@
                 node: Meow
                 fields: ["vms", "lxc", "resources.cpu", "resources.mem"]
 
-      - Squeak (PVE):
-            icon: proxmox.png
-            href: https://squeak.mnau.org/
-            description: offline
+      - Grafana:
+            icon: grafana.svg
+            href: https://grafana.mnau.org/
+            container: grafana
 
-      - Pangolin (VPS):
-            icon: pangolin.svg
-            href: https://pangolin.mnau.org/
+      - Prometheus:
+            icon: prometheus.svg
+            href: https://prometheus.mnau.org/
+            container: prometheus
 
       - Samba:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/samba-server.svg
@@ -138,12 +131,7 @@
             icon: discord.svg
             container: discord-bot
 
-- Links:
       - Blog:
             icon: sh-hugo
             href: https://blog.mnau.org/
             container: hugo
-
-      - Counter:
-            href: https://counter.mnau.org/@mnaublog
-            description: moe-counter
