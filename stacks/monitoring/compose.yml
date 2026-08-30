@@ -1,0 +1,114 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    labels:
+      caddy: prometheus.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 9090}}"
+    networks:
+      - proxy
+    volumes:
+      - ./prometheus:/etc/prometheus:ro
+      - ${DOCKER_DATA:-/home/meow/docker-data}/monitoring/prometheus:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=7d"
+      - "--storage.tsdb.retention.size=3GB"
+      - "--web.enable-lifecycle"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 96M
+    networks:
+      - proxy
+    env_file:
+      - .env
+    volumes:
+      - ./alertmanager/alertmanager.yml.tpl:/etc/alertmanager/alertmanager.yml.tpl:ro
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "if [ -n \"$$DISCORD_WEBHOOK\" ]; then URL=\"$$DISCORD_WEBHOOK\"; else URL=\"http://127.0.0.1:9/\"; fi; sed \"s|__DISCORD_WEBHOOK__|$${URL}|\" /etc/alertmanager/alertmanager.yml.tpl > /tmp/alertmanager.yml && exec alertmanager --config.file=/tmp/alertmanager.yml --storage.path=/tmp/alertmanager"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    labels:
+      caddy: grafana.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+    networks:
+      - proxy
+    env_file:
+      - .env
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ${DOCKER_DATA:-/home/meow/docker-data}/monitoring/grafana:/var/lib/grafana
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+      - ${DOCKER_DATA:-/home/meow/docker-data}/.backup-metrics:/textfile:ro
+    command:
+      - "--path.rootfs=/host"
+      - "--collector.textfile.directory=/textfile"
+      - "--collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var/lib/docker)($|/)"
+    networks:
+      - proxy
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - proxy
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+
+  blackbox:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

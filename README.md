@@ -72,6 +72,20 @@ docker run --rm -e RESTIC_PASSWORD -v /mnt/data/backup:/repo -v /tmp/restore:/re
   restic/restic -r /repo restore latest --target /restore --include /data/vaultwarden
 ```
 
+## Monitoring
+
+`stacks/monitoring`: Prometheus (7d retention) + Grafana + Alertmanager +
+node-exporter (incl. backup textfile metrics) + cAdvisor + blackbox exporter.
+
+- UIs: https://grafana.mnau.org (admin pw in `stacks/monitoring/.env`, also in vaultwarden) and https://prometheus.mnau.org
+- Alerts -> Discord once `DISCORD_WEBHOOK` is set in `stacks/monitoring/.env`
+  (until then Alertmanager fires to a blackhole - set it and `./lab up monitoring`).
+- Backup freshness alert fires if the nightly restic run is >36h stale.
+- Public checks: blog/counter/pangolin via blackbox (from here, through the VPS).
+- Remote nodes (PVE host, VPS): see `stacks/monitoring/agents/README.md` -
+  their `up` targets stay down until you run `install-node-exporter.sh` there
+  (from your MacBook where ssh works).
+
 Delete nothing under `$DOCKER_DATA` unless you mean it.
 
 ## Notes

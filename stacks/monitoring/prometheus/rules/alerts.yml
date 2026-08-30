@@ -1,0 +1,21 @@
+groups:
+  - name: backups
+    rules:
+      - alert: BackupStale
+        expr: time() - restic_backup_last_success_timestamp > 129600   # 36h
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: "restic backup older than 36h"
+          description: "Last successful backup: {{ $value | humanizeDuration }} ago."
+
+  - name: nodes
+    rules:
+      - alert: ScrapeTargetDown
+        expr: up == 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "scrape target down: {{ $labels.job }}"
