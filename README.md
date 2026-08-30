@@ -52,8 +52,27 @@ The route appears/disappears with the container (caddy-docker-proxy); no central
 Non-docker targets (e.g. Proxmox UIs) and the public `:8081` block live in `stacks/caddy/Caddyfile`.
 Removing = `./lab down <name>` and delete the dir. Data is state under `$DOCKER_DATA/<name>`.
 
-Delete nothing under `$DOCKER_DATA` unless you mean it — there is no second copy
-until the restic backups (Phase 3) are in place.
+## Backups
+
+Nightly at 03:17 (user crontab): `backup/backup.sh`
+1. Dumps databases consistently: `pg_dumpall` from litellm-db; sqlite `.backup`
+   for paperless, vaultwarden, forgejo -> `$DOCKER_DATA/.dumps/`
+2. restic -> `/mnt/data/backup` (HDD; docker-data + this repo; caches/logs excluded)
+3. Sundays: forget/prune (7 daily / 4 weekly / 6 monthly) + `restic check`
+4. Failure -> Discord webhook (set `DISCORD_WEBHOOK` in `backup/.env`)
+
+**The repo password is in `backup/.env` (chmod 600) - keep a copy in vaultwarden.
+Without it, `/mnt/data/backup` is unreadable.**
+
+Restore drill:
+```sh
+set -a && . backup/.env && set +a
+docker run --rm -e RESTIC_PASSWORD -v /mnt/data/backup:/repo restic/restic -r /repo snapshots
+docker run --rm -e RESTIC_PASSWORD -v /mnt/data/backup:/repo -v /tmp/restore:/restore \
+  restic/restic -r /repo restore latest --target /restore --include /data/vaultwarden
+```
+
+Delete nothing under `$DOCKER_DATA` unless you mean it.
 
 ## Notes
 

@@ -11,9 +11,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DOCKER_DATA:-/home/meow/docker-data}/dockhand/data:/app/data
-      - /mnt/data/backup:/mnt/data/backup
-    environment:
-      - FEAT_BACKUPS_ENABLED=true
+    # backups disabled: handled by backup/backup.sh (restic via cron)
 
 networks:
   proxy:
