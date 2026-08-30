@@ -21,6 +21,7 @@ services:
       - "4000"
     networks:
       - proxy
+      - internal
 
   db:
     image: postgres:16
@@ -37,8 +38,10 @@ services:
     volumes:
       - ${DOCKER_DATA:-/home/meow/docker-data}/litellm/postgres:/var/lib/postgresql/data
     networks:
-      - proxy
+      - internal
 
 networks:
+  internal:
+    driver: bridge
   proxy:
     external: true
