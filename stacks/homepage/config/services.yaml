@@ -27,12 +27,11 @@
                 fields: ["books", "booksDuration"]
 
       - LiteLLM:
-            icon: openai.svg
+            icon: /icons/litellm.webp
             href: https://ai.mnau.org/
             container: litellm
 
       - LLM endpoint status:
-            icon: uptime-kuma.svg
             href: https://llm.ai.e-infra.cz/status/
             description: Metacentrum
 
@@ -55,7 +54,7 @@
                 password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
 
       - MyAnonaMouse:
-            icon: https://sas.myanonamouse.net/favicon-32x32.png?v=b
+            icon: /icons/myanonamouse.png
             href: https://www.myanonamouse.net/
 
 - Tools:
@@ -129,7 +128,7 @@
             container: prometheus
 
       - Samba:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/samba-server.svg
+            icon: /icons/samba-server.svg
             container: samba
 
       - Discord Bot:
