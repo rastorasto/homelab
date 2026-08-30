@@ -101,6 +101,11 @@
             href: https://forgejo.mnau.org/
             container: forgejo
 
+      - Running:
+            icon: si-streamlit
+            href: https://running.mnau.org/
+            container: running
+
       - Pangolin:
             icon: pangolin.svg
             href: https://pangolin.mnau.org/

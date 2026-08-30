@@ -1,0 +1,19 @@
+services:
+  running:
+    build:
+      context: https://forgejo.mnau.org/rasto/running.git
+    image: meowtainers-running
+    container_name: running
+    restart: unless-stopped
+    labels:
+      caddy: running.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 8501}}"
+    volumes:
+      # workouts.csv / export.zip land here (also via the "running" samba share)
+      - ${DOCKER_DATA:-/home/meow/docker-data}/running/data:/app/data
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
