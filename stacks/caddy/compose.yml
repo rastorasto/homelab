@@ -7,8 +7,6 @@ services:
         container_name: caddy
         command: caddy docker-proxy --caddyfile-path /etc/caddy/Caddyfile
         ports:
-          # public edge target (pangolin/cloudflared legacy); kept for Phase 4 removal
-          - "127.0.0.1:8081:8081"
           # tailscale
           - "${TAILSCALE_IP}:80:80"
           - "${TAILSCALE_IP}:443:443"
@@ -18,7 +16,6 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/data:/data
             - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/config:/config
-            - ../hugo/site/public:/srv/blog:ro # hugo blog
             - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/logs:/var/log/caddy
         environment:
             - CLOUDFLARE_API_TOKEN=${CF_API_TOKEN}
@@ -26,7 +23,6 @@ services:
             - CADDY_DOCKER_CADDYFILE_PATH=/etc/caddy/Caddyfile
         networks:
             - proxy
-            - public
         restart: unless-stopped
         labels:
             - "com.centurylinklabs.watchtower.enable=false"
@@ -34,6 +30,4 @@ services:
 
 networks:
     proxy:
-        external: true
-    public:
         external: true

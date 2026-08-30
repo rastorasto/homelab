@@ -7,7 +7,7 @@
 #   - wildcard catch-all (keeps the *.mnau.org cert renewed via DNS-01
 #     and 404s unknown/dead subdomains)
 #   - routes to non-docker targets (Proxmox nodes)
-#   - the legacy public :8081 listener (blog + counter, Phase 4 removes)
+# Public content (blog + counter) is served by the Oracle VPS, not here.
 
 *.{$DOMAIN} {
 	log {
@@ -39,38 +39,5 @@ squeak.{$DOMAIN} {
 		transport http {
 			tls_insecure_skip_verify
 		}
-	}
-}
-
-:8081 {
-	log {
-		output file /var/log/caddy/public-access.log {
-			roll_size 20MiB
-			roll_keep 10
-			roll_keep_for 720h
-		}
-		format json
-	}
-
-	@blog host blog.{$DOMAIN}
-	handle @blog {
-		root * /srv/blog
-		file_server
-	}
-
-	@counter host counter.{$DOMAIN}
-	handle @counter {
-		@allowed path /@mnaublog
-		handle @allowed {
-			reverse_proxy moe-counter:3000
-		}
-
-		handle {
-			respond "Not found" 404
-		}
-	}
-
-	handle {
-		respond "Not found" 404
 	}
 }

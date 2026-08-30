@@ -17,8 +17,7 @@ set -a; source .env.shared; set +a
 : "${DOCKER_DATA:?DOCKER_DATA missing in .env.shared}"
 
 echo "== creating networks"
-docker network inspect proxy  >/dev/null 2>&1 || docker network create proxy
-docker network inspect public >/dev/null 2>&1 || docker network create public
+docker network inspect proxy >/dev/null 2>&1 || docker network create proxy
 
 echo "== creating data dirs under $DOCKER_DATA"
 for d in \
@@ -28,7 +27,7 @@ for d in \
     jellyfin jellyfin/cache \
     paperless/data paperless/media paperless/export paperless/consume paperless/redis \
     qbittorrent/config \
-    thelounge/data moe-counter/data forgejo/data vaultwarden/data \
+    thelounge/data forgejo/data vaultwarden/data \
     dockhand/data litellm/postgres searxng/config; do
     mkdir -p "$DOCKER_DATA/$d"
 done
