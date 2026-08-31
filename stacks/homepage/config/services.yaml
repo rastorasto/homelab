@@ -143,4 +143,3 @@
       - Blog:
             icon: sh-hugo
             href: https://blog.mnau.org/
-            container: hugo
