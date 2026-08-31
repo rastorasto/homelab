@@ -1,0 +1,26 @@
+# Deployment spec for <myservice> — lives in the service's own repo
+# (cloned to $APP_REPOS/<svc>). Rename "myservice" everywhere before push.
+# Web routes come free via caddy labels + the external "proxy" network.
+services:
+  myservice:
+    build:
+      context: .
+    image: meowtainers-myservice
+    container_name: myservice
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    labels:
+      caddy: myservice.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    # env_file:
+    #   - .env            # secrets, gitignored; commit .env.example as the contract
+    volumes: []               # state belongs in ${DOCKER_DATA}/<svc>/...
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

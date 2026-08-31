@@ -4,15 +4,23 @@ Self-hosted lab. Git = declarative truth; runtime state lives outside the repo.
 
 ## Layout
 
+This repo = **platform** (edge, monitoring, backup, tooling, catalog). Services
+can also live in their **own repos** (e.g. `rasto/running`), cloned as siblings:
+
 ```
-lab                     # helper: ./lab up|down|restart|pull|logs|ps [stack ...]
-bootstrap.sh            # first-run setup on a fresh machine (networks, dirs, env checks)
-.env.shared             # per-host, gitignored: DOMAIN_NAME, TAILSCALE_IP, DOCKER_DATA
-stacks/<name>/          # one self-contained docker compose project per service
+lab                     # helper: ./lab up|down|restart|pull|build|logs|ps [stack ...]
+bootstrap.sh            # first-run setup (networks, dirs, repos.conf, env checks)
+repos.conf              # manifest: service repo URLs cloned into $APP_REPOS by bootstrap
+.env.shared             # per-host, gitignored: DOMAIN_NAME, TAILSCALE_IP, DOCKER_DATA, APP_REPOS
+stacks/<name>/          # platform-owned compose projects
+stacks/templates/service/  # scaffold for new service repos (see "Adding a service")
 ```
 
-Runtime state (container configs, databases, metadata) lives in `$DOCKER_DATA`
-(default `/home/meow/docker-data`). Media/torrents/backups live on `/mnt/data` (HDD).
+`lab` discovers stacks in **both** `stacks/*/compose.yml` (platform) and
+`${APP_REPOS}/*/compose.yml` (service repos, e.g. `/home/meow/repos/running`);
+compose project name = directory name. Runtime state (container configs,
+databases, metadata) lives in `$DOCKER_DATA` (default `/home/meow/docker-data`).
+Media/torrents/backups live on `/mnt/data` (HDD).
 
 ## Access model
 
@@ -24,9 +32,9 @@ Runtime state (container configs, databases, metadata) lives in `$DOCKER_DATA`
 ## First run on a machine
 
 ```sh
-git clone --recurse-submodules ssh://git@forgejo.mnau.org:222/rasto/ubuntu-docker.git infra && cd infra
+git clone ssh://git@forgejo.mnau.org:222/rasto/ubuntu-docker.git infra && cd infra
 cp .env.shared.example .env.shared   # adjust values
-./bootstrap.sh                       # creates networks + data dirs, reports missing .env files
+./bootstrap.sh                       # networks, data dirs, clones repos.conf into $APP_REPOS, env checks
 ./lab up                             # starts all stacks
 ./lab ps                             # status
 ```
@@ -42,15 +50,22 @@ Keep a copy of every `.env` (and the restic password) in vaultwarden.
 ./lab logs caddy -f
 ```
 
-Adding a service = new `stacks/<name>/compose.yml` with caddy labels:
+Adding a service (see `stacks/templates/service/README`:
+1. `forgejo new <svc>` → clone into `$APP_REPOS/<svc>`
+2. copy `stacks/templates/service/*` into it (Dockerfile stub, `compose.yml`
+   with caddy labels, `.env.example` — the secrets contract)
+3. add the repo URL to `repos.conf`, push
+4. `./lab up <svc>` — route appears via caddy labels:
 ```yaml
 labels:
   caddy: myservice.${DOMAIN_NAME:-mnau.org}
   caddy.reverse_proxy: "{{upstreams 8080}}"
 ```
-The route appears/disappears with the container (caddy-docker-proxy); no central file to edit.
 Non-docker targets (e.g. Proxmox UIs) and the public `:8081` block live in `stacks/caddy/Caddyfile`.
-Removing = `./lab down <name>` and delete the dir. Data is state under `$DOCKER_DATA/<name>`.
+
+Removing = `./lab down <name>`, delete the stack's compose (repo and/or `stacks/<name>/`),
+and remove the URL from `repos.conf`. Data under `$DOCKER_DATA/<name>` outlives the app
+and stays backed up.
 
 ## Backups
 
@@ -90,10 +105,12 @@ Delete nothing under `$DOCKER_DATA` unless you mean it.
 
 ## Notes
 
-- `stacks/running` is a git submodule (rasto/running on forgejo). App code
-  changes: commit/push from inside it (`docker-compose.yml` there = MacBook
-  local dev, `compose.yml` = deployment here), then `./lab build running &&
-  ./lab up running` and bump the pinned commit in this repo.
+- Ownership split: this repo is the platform (edge, monitoring, backup, tooling);
+  services that deserve their own history live in their own forgejo repos,
+  cloned under `$APP_REPOS` (see `repos.conf`). Their `compose.yml` is the
+  deploy spec (e.g. `~/repos/running/compose.yml`); `lab` treats them like any
+  platform stack.
+- qBittorrent and caddy are excluded from auto-updates on purpose.
 - qBittorrent and caddy are excluded from auto-updates on purpose.
 - caddy image is built locally (cloudflare DNS + docker-proxy plugins);
   `:latest` tags elsewhere, pinned per stack only where it matters.
