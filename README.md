@@ -74,9 +74,16 @@ and stays backed up.
 Nightly at 03:17 (user crontab): `backup/backup.sh`
 1. Dumps databases consistently: `pg_dumpall` from litellm-db; sqlite `.backup`
    for paperless, vaultwarden, forgejo -> `$DOCKER_DATA/.dumps/`
-2. restic -> `/mnt/data/backup` (HDD; docker-data + this repo; caches/logs excluded)
+2. restic -> `/mnt/data/backup` (HDD; `docker-data`, this repo checkout (all
+   tracked/.gitignored files incl. per-stack `.env`), and `$APP_REPOS`)
 3. Sundays: forget/prune (7 daily / 4 weekly / 6 monthly) + `restic check`
 4. Failure -> Discord webhook (set `DISCORD_WEBHOOK` in `backup/.env`)
+
+Note: `.env` per-stack secrets ARE inside snapshots (restic doesn't honour
+`.gitignore`) — restore covers them too. Chicken-and-egg: only two secrets are
+needed BEFORE the restore itself works — `RESTIC_PASSWORD` (`backup/.env`) and
+`CF_API_TOKEN` (`stacks/caddy/.env`) — have them in vaultwarden ready
+(see ansible/README.md for the rebuild flow).
 
 **The repo password is in `backup/.env` (chmod 600) - keep a copy in vaultwarden.
 Without it, `/mnt/data/backup` is unreadable.**

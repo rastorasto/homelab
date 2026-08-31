@@ -5,7 +5,9 @@ set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 set -a; source ./.env; set +a
 
+set -a; [[ -f ../.env.shared ]] && source ../.env.shared; set +a
 DOCKER_DATA="${DOCKER_DATA:-/home/meow/docker-data}"
+APP_REPOS="${APP_REPOS:-/home/meow/repos}"
 REPO_DIR="${RESTIC_REPOSITORY:-/mnt/data/backup}"
 REPO_CHECKOUT="${REPO_CHECKOUT:-/home/meow/docker}"
 DUMPS="$DOCKER_DATA/.dumps"
@@ -31,6 +33,7 @@ restic_run() {
         -v "$REPO_DIR":/repo \
         -v "$DOCKER_DATA":/data:ro \
         -v "$REPO_CHECKOUT":/repo-src:ro \
+        -v "$APP_REPOS":/repos:ro \
         -v "backup-restic-cache:/cache" \
         "$RESTIC_IMG" "$@"
 }
@@ -62,7 +65,10 @@ docker exec forgejo sqlite3 /data/gitea/gitea.db ".backup '/data/gitea/gitea-bac
 
 # ---- restic backup ----
 log "restic backup"
-restic_run backup /data /repo-src \
+backup_targets="/data /repo-src"
+[[ -d "$APP_REPOS" ]] && backup_targets+=" /repos"
+# shellcheck disable=SC2086
+restic_run backup $backup_targets \
     --tag nightly \
     --exclude='jellyfin/cache' \
     --exclude='caddy/logs' \
