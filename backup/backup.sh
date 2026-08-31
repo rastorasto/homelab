@@ -89,6 +89,6 @@ fi
 date +%s > "$METRICS_DIR/last_success"
 {
     echo "restic_backup_last_success_timestamp $(cat "$METRICS_DIR/last_success")"
-    echo "restic_backup_snapshots_total $(restic_run snapshots --json 2>/dev/null | grep -c '"id"' || echo 0)"
+    echo "restic_backup_snapshots_total $(restic_run snapshots --json 2>/dev/null | grep -oE '"id":"[0-9a-f]+"' | wc -l || echo 0)"
 } > "$METRICS_DIR/restic.prom"
 log "OK"
