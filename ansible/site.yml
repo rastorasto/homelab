@@ -1,0 +1,44 @@
+---
+# Platform provisioning for ubuntu-docker (see AGENTS.md).
+# Every task is idempotent - safe to re-run. Re-run freely; re-applying only
+# changes what drifted.
+
+- name: Platform provisioning
+  hosts: home
+  become: true
+  serial: 1
+  tasks:
+    - name: Fail early if the data disk UUID was not provided
+      ansible.builtin.fail:
+        msg: "data_disk_uuid is unset - set it in ansible/group_vars/all.yml (lsblk -o NAME,UUID)"
+      when: data_disk_uuid is not defined or not data_disk_uuid
+
+    - name: Base packages
+      ansible.builtin.apt:
+        name: [curl, git, rsync, htop, vim, ca-certificates, gnupg]
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Unattended security upgrades
+      ansible.builtin.apt:
+        name: unattended-upgrades
+        state: present
+
+    - name: Enable unattended upgrades
+      ansible.builtin.copy:
+        src: ../templates/20auto-upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        mode: "0644"
+
+    - name: include docker setup
+      ansible.builtin.include_tasks: tasks/docker.yml
+
+    - name: include tailscale install
+      ansible.builtin.include_tasks: tasks/tailscale.yml
+
+    - name: include storage setup (HDD + docker ordering)
+      ansible.builtin.include_tasks: tasks/storage.yml
+
+    - name: include first checkout + ops wiring
+      ansible.builtin.include_tasks: tasks/deploy.yml

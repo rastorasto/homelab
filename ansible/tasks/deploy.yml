@@ -1,0 +1,30 @@
+---
+# Getting the platform repo onto the fresh box and wiring the ops rhythm.
+
+- name: cloud user shell lands on the infra checkout (clone)
+  ansible.builtin.git:
+    repo: ssh://git@forgejo.mnau.org:222/rasto/ubuntu-docker.git
+    dest: /home/{{ admin_user }}/docker
+    version: main
+    accept_hostkey: true
+  become: true
+  become_user: "{{ admin_user }}"
+  ignore_errors: true   # ssh host key not known yet on first boot; README covers running bootstrap.sh manually
+
+- name: meow user crontab: nightly restic backup
+  ansible.builtin.cron:
+    user: "{{ admin_user }}"
+    name: nightly restic backup
+    minute: "17"
+    hour: "3"
+    job: "/home/{{ admin_user }}/docker/backup/backup.sh >> {{ docker_data }}/.backup-metrics/backup.log 2>&1"
+
+- name: preempt the runtime state dir (bind mounts create it owned by root otherwise)
+  ansible.builtin.file:
+    path: "{{ docker_data }}"
+    state: directory
+    owner: "{{ admin_user }}"
+    group: "{{ admin_user }}"
+    mode: "0755"
+  become: true
+  become_user: "{{ admin_user }}"

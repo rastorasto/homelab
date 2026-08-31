@@ -1,0 +1,30 @@
+---
+# The HDD: mount by UUID at /mnt/data + make docker WAIT for it
+# (the stale-bind-mount gotcha from the running incident).
+
+- name: Mount point for the data disk
+  ansible.builtin.file:
+    path: "{{ data_mount_point }}"
+    state: directory
+    mode: "0755"
+
+- name: fstab entry for the data disk (idempotent line management)
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    regexp: "^UUID={{ data_disk_uuid }}\b"
+    line: "UUID={{ data_disk_uuid }} {{ data_mount_point }} ext4 defaults,nofail,noatime 0 2"
+    state: present
+  register: fstab_changed
+
+- name: Mount everything now (only when fstab changed)
+  ansible.builtin.mount:
+    path: "{{ data_mount_point }}"
+    state: mounted
+  when: fstab_changed.changed
+
+- name: Docker blocks until /mnt/data is mounted
+  ansible.builtin.template:
+    src: ../templates/docker-require-mount.conf.j2
+    dest: /etc/systemd/system/docker.service.d/10-mnt-data.conf
+    mode: "0644"
+  notify: reload systemd (docker)

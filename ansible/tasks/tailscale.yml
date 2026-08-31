@@ -1,0 +1,28 @@
+---
+# Tailscale. Provisioning ends at "tailscaled installed"; the first
+# `tailscale up` is deliberately manual (auth that can't live in ansible
+# without a vault - see README).
+
+- name: Tailscale apt repository key + list file
+  ansible.builtin.get_url:
+    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.tailscale-keyring.list"
+    dest: "/etc/apt/sources.list.d/tailscale.list"
+    mode: "0644"
+
+- name: Attach keyring to the repo
+  ansible.builtin.replace:
+    path: /etc/apt/sources.list.d/tailscale.list
+    regexp: "deb (https)"
+    replace: "deb [signed-by=/usr/share/keyrings/tailscale-stable.gpg] \\1"
+
+- name: Tailscale package
+  ansible.builtin.apt:
+    name: tailscale
+    state: present
+    update_cache: true
+
+- name: tailscaled running
+  ansible.builtin.service:
+    name: tailscaled
+    state: started
+    enabled: true
