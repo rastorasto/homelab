@@ -18,8 +18,10 @@ stacks/templates/service/  # scaffold for new service repos (see "Adding a servi
 
 `lab` discovers stacks in **both** `stacks/*/compose.yml` (platform) and
 `${APP_REPOS}/*/compose.yml` (service repos, e.g. `/home/meow/repos/running`);
-compose project name = directory name. Runtime state (container configs,
-databases, metadata) lives in `$DOCKER_DATA` (default `/home/meow/docker-data`).
+compose project name = directory name. Residence rule: **your own code with its
+own history → `$APP_REPOS`; everything else → `stacks/`** (`./lab ls` shows the
+split). Runtime state (container configs, databases, metadata) lives in
+`$DOCKER_DATA` (default `/home/meow/docker-data`).
 Media/torrents/backups live on `/mnt/data` (HDD).
 
 ## Access model

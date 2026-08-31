@@ -1,11 +1,14 @@
-# Deployment spec for <myservice> — lives in the service's own repo
-# (cloned to $APP_REPOS/<svc>). Rename "myservice" everywhere before push.
-# Web routes come free via caddy labels + the external "proxy" network.
+# Deployment skeleton for a new service (upstream image - the common case).
+# Lives in this repo at stacks/<svc>/compose.yml, or in the service's own repo
+# at $APP_REPOS/<svc>/compose.yml, if it has a history of its own.
+# Rename "myservice" everywhere before ./lab up myservice.
 services:
   myservice:
-    build:
-      context: .
-    image: meowtainers-myservice
+    image: myregistry/myservice:latest      # upstream image
+    ## self-built instead? use this + a Dockerfile in the same dir:
+    # build:
+    #   context: .
+    # image: meowtainers-myservice
     container_name: myservice
     restart: unless-stopped
     deploy:
@@ -14,9 +17,9 @@ services:
           memory: 256M
     labels:
       caddy: myservice.${DOMAIN_NAME:-mnau.org}
-      caddy.reverse_proxy: "{{upstreams 8080}}"
+      caddy.reverse_proxy: "{{upstreams 8080}}"   # -> web route https://myservice.mnau.org
     # env_file:
-    #   - .env            # secrets, gitignored; commit .env.example as the contract
+    #   - .env            # secrets, gitignored; .env.example is the contract
     volumes: []               # state belongs in ${DOCKER_DATA}/<svc>/...
     networks:
       - proxy

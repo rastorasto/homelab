@@ -36,6 +36,17 @@ for root in "$APP_REPOS" "stacks"; do
     done
 done
 
+if [[ $cmd == ls ]]; then
+    for f in stacks/*/compose.yml; do
+        [[ -e $f ]] && basename "$(dirname "$f")"
+    done | sort | sed 's/^/  platform: /'
+    [[ -d $APP_REPOS ]] || exit 0
+    for f in "$APP_REPOS"/*/compose.yml; do
+        [[ -e $f ]] && basename "$(dirname "$f")"
+    done | sort | sed 's/^/  service:  /'
+    exit 0
+fi
+
 if [[ ${#targets[@]} -eq 0 || "${targets[0]:-}" == "all" ]]; then
     mapfile -t targets < <(printf '%s\n' "${!COMPOSE_FILES[@]}" | sort)
 fi
