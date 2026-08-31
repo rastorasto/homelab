@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
-# lab - thin wrapper around per-stack docker compose projects.
+# lab - thin wrapper around docker compose projects.
+#
+# Discovers compose projects in two places:
+#   stacks/<name>/compose.yml   - platform-owned stacks (this repo)
+#   $APP_REPOS/<name>/compose.yml - service-owned stacks (sibling repos)
+# Stacks in this repo win on name collision.
+#
 # Usage:
-#   ./lab up|down|restart|pull|ps           # all stacks
-#   ./lab up jellyfin qbittorrent           # specific stacks
-#   ./lab logs jellyfin -f                  # args after '-' pass through to compose
+#   ./lab up|down|restart|pull|build|logs|ps           # all stacks
+#   ./lab up jellyfin qbittorrent                      # specific stacks
+#   ./lab logs jellyfin -f                             # args after '-' pass through to compose
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
@@ -14,23 +20,35 @@ targets=(); extra=()
 for a in "$@"; do
     if [[ $a == -* ]]; then extra+=("$a"); else targets+=("$a"); fi
 done
-if [[ ${#targets[@]} -eq 0 || "${targets[0]:-}" == "all" ]]; then
-    mapfile -t targets < <(find stacks -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort)
-fi
-# sensible defaults
-if [[ $cmd == up && ${#extra[@]} -eq 0 ]]; then extra=(-d); fi
-if [[ $cmd == logs ]]; then extra+=(--tail 50); fi
 
 set -a
 # shellcheck disable=SC1091
 [[ -f .env.shared ]] && source .env.shared
 set +a
+APP_REPOS="${APP_REPOS:-/home/meow/repos}"
+
+declare -A COMPOSE_FILES=()
+for root in "$APP_REPOS" "stacks"; do
+    [[ -d $root ]] || continue
+    for f in "$root"/*/compose.yml; do
+        [[ -e $f ]] || continue
+        COMPOSE_FILES["$(basename "$(dirname "$f")")"]="$f"
+    done
+done
+
+if [[ ${#targets[@]} -eq 0 || "${targets[0]:-}" == "all" ]]; then
+    mapfile -t targets < <(printf '%s\n' "${!COMPOSE_FILES[@]}" | sort)
+fi
+# sensible defaults
+if [[ $cmd == up && ${#extra[@]} -eq 0 ]]; then extra=(-d); fi
+if [[ $cmd == logs ]]; then extra+=(--tail 50); fi
 
 for s in "${targets[@]}"; do
-    if [[ ! -f "stacks/$s/compose.yml" ]]; then
+    compose_file="${COMPOSE_FILES[$s]:-}"
+    if [[ -z $compose_file ]]; then
         echo "== $s: skipped (no compose.yml)"
         continue
     fi
     echo "== $s: docker compose $cmd ${extra[*]}"
-    docker compose -f "stacks/$s/compose.yml" "$cmd" "${extra[@]}"
+    docker compose -f "$compose_file" "$cmd" "${extra[@]}"
 done

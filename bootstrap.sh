@@ -8,9 +8,6 @@ echo "== checking docker"
 docker version >/dev/null
 docker compose version >/dev/null
 
-echo "== fetching git submodules"
-git submodule update --init --recursive
-
 if [[ ! -f .env.shared ]]; then
     cp .env.shared.example .env.shared
     echo "!! .env.shared created from example - EDIT IT before continuing"
@@ -18,6 +15,17 @@ if [[ ! -f .env.shared ]]; then
 fi
 set -a; source .env.shared; set +a
 : "${DOCKER_DATA:?DOCKER_DATA missing in .env.shared}"
+
+echo "== cloning service repos (repos.conf) into ${APP_REPOS:-/home/meow/repos}"
+repos_dir="${APP_REPOS:-/home/meow/repos}"
+mkdir -p "$repos_dir"
+while IFS= read -r url; do
+    [[ -z $url || $url == \#* ]] && continue
+    name="$(basename "$url" .git)"
+    if [[ ! -d $repos_dir/$name/.git ]]; then
+        git clone "$url" "$repos_dir/$name"
+    fi
+done < repos.conf
 
 echo "== creating networks"
 docker network inspect proxy >/dev/null 2>&1 || docker network create proxy
@@ -37,7 +45,7 @@ done
 
 echo "== checking per-stack secrets"
 missing=0
-for ex in stacks/*/.env.example; do
+for ex in stacks/*/.env.example "${APP_REPOS:-/home/meow/repos}"/*/.env.example; do
     [[ -e $ex ]] || continue
     env_file="${ex%.example}"
     if [[ ! -f $env_file ]]; then
