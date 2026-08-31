@@ -8,6 +8,9 @@ echo "== checking docker"
 docker version >/dev/null
 docker compose version >/dev/null
 
+echo "== fetching git submodules"
+git submodule update --init --recursive
+
 if [[ ! -f .env.shared ]]; then
     cp .env.shared.example .env.shared
     echo "!! .env.shared created from example - EDIT IT before continuing"

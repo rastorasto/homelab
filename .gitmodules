@@ -1,0 +1,3 @@
+[submodule "stacks/running"]
+	path = stacks/running
+	url = ssh://git@forgejo.mnau.org:222/rasto/running.git

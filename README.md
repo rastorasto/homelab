@@ -24,7 +24,7 @@ Runtime state (container configs, databases, metadata) lives in `$DOCKER_DATA`
 ## First run on a machine
 
 ```sh
-git clone ssh://git@forgejo.mnau.org:222/rasto/ubuntu-docker.git infra && cd infra
+git clone --recurse-submodules ssh://git@forgejo.mnau.org:222/rasto/ubuntu-docker.git infra && cd infra
 cp .env.shared.example .env.shared   # adjust values
 ./bootstrap.sh                       # creates networks + data dirs, reports missing .env files
 ./lab up                             # starts all stacks
@@ -90,6 +90,10 @@ Delete nothing under `$DOCKER_DATA` unless you mean it.
 
 ## Notes
 
+- `stacks/running` is a git submodule (rasto/running on forgejo). App code
+  changes: commit/push from inside it (`docker-compose.yml` there = MacBook
+  local dev, `compose.yml` = deployment here), then `./lab build running &&
+  ./lab up running` and bump the pinned commit in this repo.
 - qBittorrent and caddy are excluded from auto-updates on purpose.
 - caddy image is built locally (cloudflare DNS + docker-proxy plugins);
   `:latest` tags elsewhere, pinned per stack only where it matters.
