@@ -1,19 +1,21 @@
 ---
 # Tailscale. Provisioning ends at "tailscaled installed"; the first
 # `tailscale up` is deliberately manual (auth that can't live in ansible
-# without a vault - see README).
+# without a vault - see README). Repo layout mirrors the official installer:
+# key at /usr/share/keyrings/tailscale-archive-keyring.gpg, which the
+# .tailscale-keyring.list already references via signed-by - don't rewrite it.
 
-- name: Tailscale apt repository key + list file
+- name: Tailscale apt signing key
   ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.tailscale-keyring.list"
-    dest: "/etc/apt/sources.list.d/tailscale.list"
+    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ tailscale_distro_codename }}.noarmor.gpg"
+    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
     mode: "0644"
 
-- name: Attach keyring to the repo
-  ansible.builtin.replace:
-    path: /etc/apt/sources.list.d/tailscale.list
-    regexp: "deb (https)"
-    replace: "deb [signed-by=/usr/share/keyrings/tailscale-stable.gpg] \\1"
+- name: Tailscale apt repository
+  ansible.builtin.get_url:
+    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ tailscale_distro_codename }}.tailscale-keyring.list"
+    dest: /etc/apt/sources.list.d/tailscale.list
+    mode: "0644"
 
 - name: Tailscale package
   ansible.builtin.apt:

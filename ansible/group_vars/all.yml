@@ -3,17 +3,22 @@
 # Override per host in inventory or with -e on the command line.
 
 # The user that owns the infra checkout and runs docker containers.
-admin_user: meow
+admin_user: rasto
 
 # Runtime state lives outside the repo (see README).
-docker_data: /home/meow/docker-data
+docker_data: /home/rasto/docker-data
 
 # The HDD holding media/backups, mounted at /mnt/data (fstab by UUID).
 data_disk_uuid: "88f83a4e-2b32-41f1-b7d2-5dd68e21aef6"
 data_mount_point: /mnt/data
 
 # Service checkouts land here (see repos.conf + lab).
-app_repos: /home/meow/repos
+app_repos: /home/rasto/repos
+
+# Apt repo codename used for the tailscale repo. Defaults to this box's
+# release; pin to the newest codename Tailscale ships (e.g. "noble") if a
+# fresh Ubuntu release isn't on pkgs.tailscale.com yet.
+tailscale_distro_codename: "{{ ansible_distribution_release }}"
 
 # Public keys authorized on the admin user's account (provisioned into ~/.ssh/authorized_keys).
 admin_pubkeys:
