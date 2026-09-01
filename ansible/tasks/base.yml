@@ -1,0 +1,21 @@
+---
+# Boring-but-needed groundwork: tools we rely on later (git/curl/rsync/...),
+# and unattended security upgrades so the box patches itself.
+
+- name: Base packages
+  ansible.builtin.apt:
+    name: [curl, git, rsync, htop, vim, ca-certificates, gnupg]
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Unattended security upgrades (installed)
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+
+- name: Unattended security upgrades (enabled)
+  ansible.builtin.copy:
+    src: ../templates/20auto-upgrades
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    mode: "0644"
