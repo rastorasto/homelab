@@ -5,6 +5,10 @@
 - name: Platform provisioning
   hosts: home
   become: true
+
+  handlers:
+    - ansible.builtin.import_tasks: handlers/main.yml
+
   tasks:
     - name: Fail early if the data disk UUID wasn't configured
       ansible.builtin.fail:

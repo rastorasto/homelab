@@ -1,9 +1,13 @@
 ---
-- name: restart docker
-  ansible.builtin.service:
-    name: docker
-    state: restarted
+# Handlers run in the order DEFINED here when several fire at once.
+# daemon-reload must precede the docker restart, or the restart won't see
+# a freshly-landed systemd drop-in (RequiresMountsFor) yet.
 
 - name: reload systemd (docker)
   ansible.builtin.systemd:
     daemon_reload: true
+
+- name: restart docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted

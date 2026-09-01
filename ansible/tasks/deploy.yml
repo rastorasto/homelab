@@ -19,7 +19,7 @@
     comment: "{{ item.split(' ')[2] | default('laptop') }}"
   loop: "{{ admin_pubkeys }}"
 
-- name: "meow user crontab: nightly restic backup"
+- name: "admin user crontab: nightly restic backup"
   ansible.builtin.cron:
     user: "{{ admin_user }}"
     name: nightly restic backup
