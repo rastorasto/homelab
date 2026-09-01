@@ -5,7 +5,11 @@ set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 echo "== checking docker"
-docker version >/dev/null
+if ! docker info >/dev/null 2>&1; then
+    echo "!! docker daemon not reachable - after ansible, log out/in (or 'newgrp docker')"
+    echo "!! once to pick up the docker group; do NOT just re-run this with sudo"
+    exit 1
+fi
 docker compose version >/dev/null
 
 if [[ ! -f .env.shared ]]; then
@@ -42,6 +46,15 @@ for d in \
     dockhand/data litellm/postgres; do
     mkdir -p "$DOCKER_DATA/$d"
 done
+
+echo "== ownership for non-root-uid containers (they can't write rasto-owned dirs)"
+# grafana runs as 472, prometheus as 65534 (nobody). rsync'd/mkdir'd dirs land
+# 1000-owned and both crash-loop on first ./lab up - chown via a root container,
+# no sudo needed (docker group == root-equivalent).
+docker run --rm -v "$DOCKER_DATA":/dd alpine sh -c \
+    'mkdir -p /dd/monitoring/grafana /dd/monitoring/prometheus \
+    && chown -R 472:472 /dd/monitoring/grafana \
+    && chown -R 65534:65534 /dd/monitoring/prometheus'
 
 echo "== checking per-stack secrets"
 missing=0
