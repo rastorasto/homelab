@@ -39,7 +39,7 @@ for d in \
     paperless/data paperless/media paperless/export paperless/consume paperless/redis \
     qbittorrent/config running/data \
     thelounge/data forgejo/data vaultwarden/data \
-    dockhand/data litellm/postgres searxng/config; do
+    dockhand/data litellm/postgres; do
     mkdir -p "$DOCKER_DATA/$d"
 done
 

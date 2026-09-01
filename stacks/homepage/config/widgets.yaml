@@ -7,6 +7,5 @@
       disk: /
 
 - search:
-      provider: searxng
-      url: https://search.mnau.org/
+      provider: duckduckgo
       target: _blank

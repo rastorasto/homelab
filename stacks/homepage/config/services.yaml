@@ -81,11 +81,6 @@
                 username: void
                 password: "{{HOMEPAGE_VAR_PAPERLESS_PASSWORD}}"
 
-      - SearXNG:
-            icon: searxng.svg
-            href: https://search.mnau.org/
-            container: searxng
-
       - BentoPDF:
             icon: bentopdf.svg
             href: https://pdf.mnau.org/
