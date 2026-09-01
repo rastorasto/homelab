@@ -8,23 +8,25 @@
     state: directory
     mode: "0755"
 
-- name: fstab entry for the data disk (idempotent line management)
-  ansible.builtin.lineinfile:
-    path: /etc/fstab
-    regexp: "^UUID={{ data_disk_uuid }}\b"
-    line: "UUID={{ data_disk_uuid }} {{ data_mount_point }} ext4 defaults,nofail,noatime 0 2"
-    state: present
-  register: fstab_changed
-
-- name: Mount everything now (only when fstab changed)
+# Single source of truth for the fstab line: the mount module manages the
+# entry AND mounts it (a separate lineinfile would fight it every run).
+- name: Data disk in fstab and mounted
   ansible.builtin.mount:
     path: "{{ data_mount_point }}"
+    src: "UUID={{ data_disk_uuid }}"
+    fstype: ext4
+    opts: defaults,nofail,noatime
+    dump: "0"
+    passno: "2"
     state: mounted
-  when: fstab_changed.changed
 
+# Drop-in so docker never starts against an unmounted /mnt/data.
+# First apply restarts docker once (needs daemon-reload FIRST - handler order).
 - name: Docker blocks until /mnt/data is mounted
   ansible.builtin.template:
     src: ../templates/docker-require-mount.conf.j2
     dest: /etc/systemd/system/docker.service.d/10-mnt-data.conf
     mode: "0644"
-  notify: reload systemd (docker)
+  notify:
+    - reload systemd (docker)
+    - restart docker
