@@ -83,10 +83,18 @@ services:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
     restart: unless-stopped
+    command:
+      # 2-core Pentium 3558U: default 1s housekeeping + ALL collectors (esp. the
+      # per-container fs-usage walk of /var/lib/docker, which took 2+ min per
+      # pass) ate half a core. Dashboards only consume
+      # container_cpu_usage_seconds_total + container_memory_usage_bytes.
+      - --housekeeping_interval=15s
+      - --docker_only=true
+      - --disable_metrics=disk,diskIO,tcp,udp,sched,process,percpu,hugetlb,referenced_memory,advtcp,cpu_topology,resctrl
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 512M
     networks:
       - proxy
     volumes:
