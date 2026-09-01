@@ -26,3 +26,19 @@
     name: tailscaled
     state: started
     enabled: true
+
+# auth<->authkey path for "tailscale up" (plain manual if not vaulted):
+# fills once from group_vars/vault.yml -> fully unattended rebuild login.
+# the checks keep it idempotent: only logs in when the node isn't connected yet.
+- name: check tailscale login state
+  ansible.builtin.command: tailscale status --json
+  register: ts_status
+  changed_when: false
+  ignore_errors: true
+
+- name: tailscale up (from vault, only if not connected)
+  ansible.builtin.command: >
+    tailscale up --authkey "{{ tailscale_authkey }}" --hostname ubuntu-vm
+  when:
+    - tailscale_authkey is defined and tailscale_authkey
+    - (ts_status.stdout | default("") | from_json).BackendState | default("") != "Running"
