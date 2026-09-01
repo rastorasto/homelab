@@ -11,6 +11,14 @@
   become_user: "{{ admin_user }}"
   ignore_errors: true   # ssh host key not known yet on first boot; README covers running bootstrap.sh manually
 
+- name: admin ssh access for the daily-driver laptop
+  ansible.posix.authorized_key:
+    user: "{{ admin_user }}"
+    state: present
+    key: "{{ item }}"
+    comment: "{{ item.split(' ')[2] | default('laptop') }}"
+  loop: "{{ admin_pubkeys }}"
+
 - name: "meow user crontab: nightly restic backup"
   ansible.builtin.cron:
     user: "{{ admin_user }}"

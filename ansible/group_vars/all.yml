@@ -15,3 +15,7 @@ data_mount_point: /mnt/data
 
 # Service checkouts land here (see repos.conf + lab).
 app_repos: /home/meow/repos
+
+# Public keys authorized on the admin user's account (provisioned into ~/.ssh/authorized_keys).
+admin_pubkeys:
+  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILFYMo8WOg6EUWcREmrn2oFNcj/DBasxFKsmpnNKXCUs rastislavuhliar123@gmail.com"
