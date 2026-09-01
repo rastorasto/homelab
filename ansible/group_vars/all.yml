@@ -9,8 +9,7 @@ admin_user: meow
 docker_data: /home/meow/docker-data
 
 # The HDD holding media/backups, mounted at /mnt/data (fstab by UUID).
-# REQUIRED: set the real UUID of your data disk (lsblk -o NAME,UUID).
-data_disk_uuid: "~"
+data_disk_uuid: "88f83a4e-2b32-41f1-b7d2-5dd68e21aef6"
 data_mount_point: /mnt/data
 
 # Service checkouts land here (see repos.conf + lab).
