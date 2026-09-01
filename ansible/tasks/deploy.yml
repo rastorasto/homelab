@@ -11,7 +11,7 @@
   become_user: "{{ admin_user }}"
   ignore_errors: true   # ssh host key not known yet on first boot; README covers running bootstrap.sh manually
 
-- name: meow user crontab: nightly restic backup
+- name: "meow user crontab: nightly restic backup"
   ansible.builtin.cron:
     user: "{{ admin_user }}"
     name: nightly restic backup

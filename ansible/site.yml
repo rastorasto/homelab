@@ -8,7 +8,9 @@
   tasks:
     - name: Fail early if the data disk UUID wasn't configured
       ansible.builtin.fail:
-        msg: "set data_disk_uuid in ansible/group_vars/all.yml (see: lsblk -o NAME,UUID)"
+        msg: >
+          set data_disk_uuid in ansible/group_vars/all.yml
+          (see: lsblk -o NAME,UUID)
       when: data_disk_uuid is not defined or not data_disk_uuid
 
     - ansible.builtin.include_tasks: tasks/base.yml
