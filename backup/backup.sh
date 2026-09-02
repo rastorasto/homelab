@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
-# backup.sh - nightly restic backup of docker-data (+ DB dumps) -> /mnt/data/backup
-# Cron (user meow): 17 3 * * * /home/meow/docker/backup/backup.sh
+# backup.sh - nightly restic backup of the three trees that matter:
+#   ~/docker  ~/docker-data  ~/repos   ->   /mnt/data/backup
+# Snapshot trees are named exactly that: /docker /docker-data /repos.
+# Cron (admin_user, created by ansible/tasks/deploy.yml):
+#   17 3 * * * <checkout>/backup/backup.sh >> $DOCKER_DATA/.backup-metrics/backup.log 2>&1
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
-set -a; source ./.env; set +a
+set -a; source ./.env; set +a          # RESTIC_PASSWORD, DISCORD_WEBHOOK
+set -a; source ../.env.shared; set +a  # DOCKER_DATA, APP_REPOS
 
-set -a; [[ -f ../.env.shared ]] && source ../.env.shared; set +a
-DOCKER_DATA="${DOCKER_DATA:-/home/meow/docker-data}"
-APP_REPOS="${APP_REPOS:-/home/meow/repos}"
+# fail loudly on missing vars: docker auto-creates missing mount dirs as
+# root-owned empty dirs, and restic backs them up silently (Sep 2026 incident).
+: "${DOCKER_DATA:?missing - set it in ../.env.shared}"
+: "${APP_REPOS:?missing - set it in ../.env.shared}"
+CHECKOUT="$(cd .. && pwd)"   # this script lives inside the checkout
 REPO_DIR="${RESTIC_REPOSITORY:-/mnt/data/backup}"
-REPO_CHECKOUT="${REPO_CHECKOUT:-/home/meow/docker}"
 DUMPS="$DOCKER_DATA/.dumps"
 METRICS_DIR="$DOCKER_DATA/.backup-metrics"
-RESTIC_IMG="restic/restic"
+mkdir -p "$METRICS_DIR" "$DUMPS"
 
 log()  { echo "[$(date '+%F %T')] $*"; }
 fail() {
@@ -25,32 +30,29 @@ fail() {
     exit 1
 }
 
-restic_run() {
+restic() {
     docker run --rm \
         -e RESTIC_PASSWORD \
         -e RESTIC_REPOSITORY=/repo \
         -e RESTIC_CACHE_DIR=/cache \
         -v "$REPO_DIR":/repo \
-        -v "$DOCKER_DATA":/data:ro \
-        -v "$REPO_CHECKOUT":/repo-src:ro \
+        -v "$CHECKOUT":/docker:ro \
+        -v "$DOCKER_DATA":/docker-data:ro \
         -v "$APP_REPOS":/repos:ro \
         -v "backup-restic-cache:/cache" \
-        "$RESTIC_IMG" "$@"
+        restic/restic "$@"
 }
 
-mkdir -p "$DUMPS" "$METRICS_DIR"
-
 # init repo on first run
-if ! restic_run snapshots >/dev/null 2>&1; then
+if ! restic snapshots >/dev/null 2>&1; then
     log "initializing restic repo at $REPO_DIR"
-    restic_run init >/dev/null || fail "restic init"
+    restic init >/dev/null || fail "restic init"
 fi
 
-# ---- consistent DB dumps ----
+# ---- consistent DB dumps (land in docker-data, ride along in the backup) ----
 log "dumping litellm postgres"
 docker exec litellm-db sh -c 'pg_dumpall -U "$POSTGRES_USER"' | gzip > "$DUMPS/litellm-pgall.sql.gz" \
     || fail "pg_dump litellm-db"
-
 for spec in "paperless /data/db.sqlite3" "vaultwarden /data/db.sqlite3"; do
     set -- $spec
     log "sqlite dump: $1 (hot .backup via forgejo image)"
@@ -58,18 +60,13 @@ for spec in "paperless /data/db.sqlite3" "vaultwarden /data/db.sqlite3"; do
     docker run --rm --entrypoint sqlite3 -v "$DOCKER_DATA":/dd codeberg.org/forgejo/forgejo:16 \
         "/dd/$1/data/db.sqlite3" ".backup '/dd/.dumps/$1.sqlite3'" || fail "sqlite dump $1"
 done
-
 log "sqlite dump: forgejo"
 docker exec forgejo sqlite3 /data/gitea/gitea.db ".backup '/data/gitea/gitea-backup.sqlite3'" \
     || fail "sqlite dump forgejo"
 
 # ---- restic backup ----
 log "restic backup"
-backup_targets="/data /repo-src"
-[[ -d "$APP_REPOS" ]] && backup_targets+=" /repos"
-# shellcheck disable=SC2086
-restic_run backup $backup_targets \
-    --tag nightly \
+restic backup /docker /docker-data /repos --tag nightly \
     --exclude='jellyfin/cache' \
     --exclude='caddy/logs' \
     --exclude='thelounge/data/logs' \
@@ -77,18 +74,16 @@ restic_run backup $backup_targets \
     --exclude='.backup-metrics' \
     >/dev/null || fail "restic backup"
 
-# prune + check on Sundays
+# prune on Sundays (7d/4w/6m)
 if [[ $(date +%u) == 7 ]]; then
     log "weekly forget/prune"
-    restic_run forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6 >/dev/null || fail "restic forget"
-    log "weekly check"
-    restic_run check >/dev/null || fail "restic check"
+    restic forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6 >/dev/null || fail "restic forget"
 fi
 
-# ---- metrics + done ----
+# ---- metrics ----
 date +%s > "$METRICS_DIR/last_success"
 {
     echo "restic_backup_last_success_timestamp $(cat "$METRICS_DIR/last_success")"
-    echo "restic_backup_snapshots_total $(restic_run snapshots --json 2>/dev/null | grep -oE '"id":"[0-9a-f]+"' | wc -l || echo 0)"
+    echo "restic_backup_snapshots_total $(restic snapshots --json 2>/dev/null | grep -oE '"id":"[0-9a-f]+"' | wc -l || echo 0)"
 } > "$METRICS_DIR/restic.prom"
 log "OK"
