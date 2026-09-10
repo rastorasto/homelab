@@ -1,0 +1,27 @@
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          # init loads the local embedding model (torch) and spikes ~1.1G
+          memory: 1500M
+    labels:
+      caddy: chat.${DOMAIN_NAME:-mnau.org}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    environment:
+      # litellm sits on the same proxy network; everything model-related
+      # flows through it (master key lives in .env).
+      OPENAI_API_BASE_URL: http://litellm:4000/v1
+    env_file:
+      - .env
+    volumes:
+      - ${DOCKER_DATA:-/home/meow/docker-data}/openwebui/data:/app/backend/data
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
