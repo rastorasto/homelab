@@ -26,10 +26,25 @@
                 key: "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_API_KEY}}"
                 fields: ["books", "booksDuration"]
 
+      - BookOrbit:
+            icon: /icons/bookorbit.svg
+            href: https://books.mnau.org/
+            container: bookorbit-app
+
       - LiteLLM:
             icon: /icons/litellm.webp
             href: https://ai.mnau.org/
             container: litellm
+
+      - Omniroute:
+            icon: /icons/omniroute.svg
+            href: https://omni.mnau.org/
+            container: omniroute
+
+      - Open WebUI:
+            icon: open-webui
+            href: https://chat.mnau.org/
+            container: openwebui
 
       - LLM endpoint status:
             href: https://llm.ai.e-infra.cz/status/
@@ -95,11 +110,6 @@
             icon: forgejo.svg
             href: https://forgejo.mnau.org/
             container: forgejo
-
-      - Running:
-            icon: si-streamlit
-            href: https://running.mnau.org/
-            container: running
 
       - Pangolin:
             icon: pangolin.svg
