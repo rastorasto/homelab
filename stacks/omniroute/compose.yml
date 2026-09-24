@@ -6,7 +6,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 384M
+          memory: 768M
     labels:
       caddy: omni.${DOMAIN_NAME:-mnau.org}
       caddy.reverse_proxy: "{{upstreams 20128}}"
