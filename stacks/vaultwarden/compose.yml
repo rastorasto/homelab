@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     environment:
       DOMAIN: "https://vaultwarden.mnau.org"
+      SIGNUPS_ENABLED: "false"
     labels:
       caddy: vaultwarden.${DOMAIN_NAME:-mnau.org}
       caddy.reverse_proxy: "{{upstreams 80}}"
