@@ -43,7 +43,8 @@ for d in \
     paperless/data paperless/media paperless/export paperless/consume paperless/redis \
     qbittorrent/config running/data \
     thelounge/data forgejo/data vaultwarden/data \
-    dockhand/data litellm/postgres openwebui/data; do
+    dockhand/data litellm/postgres openwebui/data \
+    omniroute; do
     mkdir -p "$DOCKER_DATA/$d"
 done
 

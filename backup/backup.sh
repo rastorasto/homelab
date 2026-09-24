@@ -60,6 +60,10 @@ for spec in "paperless /data/db.sqlite3" "vaultwarden /data/db.sqlite3"; do
     docker run --rm --entrypoint sqlite3 -v "$DOCKER_DATA":/dd codeberg.org/forgejo/forgejo:16 \
         "/dd/$1/data/db.sqlite3" ".backup '/dd/.dumps/$1.sqlite3'" || fail "sqlite dump $1"
 done
+log "sqlite dump: omniroute"
+rm -f "$DUMPS/omniroute.sqlite3"
+docker run --rm --entrypoint sqlite3 -v "$DOCKER_DATA":/dd codeberg.org/forgejo/forgejo:16 \
+    "/dd/omniroute/storage.sqlite" ".backup '/dd/.dumps/omniroute.sqlite3'" || fail "sqlite dump omniroute"
 log "sqlite dump: forgejo"
 docker exec forgejo sqlite3 /data/gitea/gitea.db ".backup '/data/gitea/gitea-backup.sqlite3'" \
     || fail "sqlite dump forgejo"
