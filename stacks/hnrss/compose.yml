@@ -1,0 +1,14 @@
+# hnrss — HN RSS proxy (self-hosted replacement for flaky hnrss.org)
+# Internal only: FreshRSS reaches it via the proxy network, no caddy label,
+# no published port.
+services:
+  hnrss:
+    build: .
+    container_name: hnrss
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
