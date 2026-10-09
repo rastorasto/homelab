@@ -17,3 +17,8 @@ stacks/hugo/site/resources/_gen/
 
 # SearXNG generated config (contains secret_key) - use .example as template
 stacks/searxng/config/settings.yml
+
+# Local agent scratch docs (kept out of the repo)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
