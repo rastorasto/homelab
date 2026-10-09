@@ -29,4 +29,4 @@
     state: started
     enabled: true
   # `tailscale up` is the one deliberate manual step after provisioning
-  # (prints a login link you click once - see ansible/README.md).
+  # (prints a login link you click once).
