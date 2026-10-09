@@ -53,6 +53,9 @@ fi
 log "dumping litellm postgres"
 docker exec litellm-db sh -c 'pg_dumpall -U "$POSTGRES_USER"' | gzip > "$DUMPS/litellm-pgall.sql.gz" \
     || fail "pg_dump litellm-db"
+log "dumping bookorbit postgres"
+docker exec bookorbit-db sh -c 'pg_dumpall -U "$POSTGRES_USER"' | gzip > "$DUMPS/bookorbit-pgall.sql.gz" \
+    || fail "pg_dump bookorbit-db"
 for spec in "paperless /data/db.sqlite3" "vaultwarden /data/db.sqlite3"; do
     set -- $spec
     log "sqlite dump: $1 (hot .backup via forgejo image)"

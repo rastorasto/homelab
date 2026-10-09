@@ -72,8 +72,8 @@ and stays backed up.
 ## Backups
 
 Nightly at 03:17 (user crontab): `backup/backup.sh`
-1. Dumps databases consistently: `pg_dumpall` from litellm-db; sqlite `.backup`
-   for paperless, vaultwarden, forgejo -> `$DOCKER_DATA/.dumps/`
+1. Dumps databases consistently: `pg_dumpall` from litellm-db and bookorbit-db;
+   sqlite `.backup` for paperless, vaultwarden, forgejo -> `$DOCKER_DATA/.dumps/`
 2. restic -> `/mnt/data/backup` (HDD; `docker-data`, this repo checkout (all
    tracked/.gitignored files incl. per-stack `.env`), and `$APP_REPOS`)
 3. Sundays: forget/prune (7 daily / 4 weekly / 6 monthly) + `restic check`

@@ -37,11 +37,12 @@ docker network inspect proxy >/dev/null 2>&1 || docker network create proxy
 echo "== creating data dirs under $DOCKER_DATA"
 for d in \
     audiobookshelf/config audiobookshelf/metadata \
+    bookorbit/app bookorbit/postgres \
     caddy/data caddy/config caddy/logs \
     freshrss/data freshrss/extensions \
     jellyfin jellyfin/cache \
     paperless/data paperless/media paperless/export paperless/consume paperless/redis \
-    qbittorrent/config running/data \
+    qbittorrent/config \
     thelounge/data forgejo/data vaultwarden/data \
     dockhand/data litellm/postgres openwebui/data \
     omniroute; do
