@@ -73,7 +73,7 @@ docker exec forgejo sqlite3 /data/gitea/gitea.db ".backup '/data/gitea/gitea-bac
 
 # ---- restic backup ----
 log "restic backup"
-restic backup /docker /docker-data /repos --tag nightly \
+restic backup /docker /docker-data /repos --tag nightly --host cat \
     --exclude='jellyfin/cache' \
     --exclude='caddy/logs' \
     --exclude='thelounge/data/logs' \
@@ -84,7 +84,7 @@ restic backup /docker /docker-data /repos --tag nightly \
 # prune on Sundays (7d/4w/6m)
 if [[ $(date +%u) == 7 ]]; then
     log "weekly forget/prune"
-    restic forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6 >/dev/null || fail "restic forget"
+    restic forget --prune --host cat --keep-daily 7 --keep-weekly 4 --keep-monthly 6 >/dev/null || fail "restic forget"
 fi
 
 # ---- metrics ----
