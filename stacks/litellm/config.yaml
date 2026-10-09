@@ -1,147 +1,7 @@
 model_list:
-  - model_name: mini
-    litellm_params:
-      model: openai/mini
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: auto-llm-heuristic
-    litellm_params:
-      model: openai/auto-llm-heuristic
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: kimi
-    litellm_params:
-      model: openai/kimi
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: glm-5
-    litellm_params:
-      model: openai/glm-5
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: deepseek
-    litellm_params:
-      model: openai/deepseek
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: qwen3-reranker-4b
-    litellm_params:
-      model: openai/qwen3-reranker-4b
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: qwen3.5-int4
-    litellm_params:
-      model: openai/qwen3.5-int4
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: kimi-k3
-    litellm_params:
-      model: openai/kimi-k3
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: mxbai-embed-large:latest
-    litellm_params:
-      model: openai/mxbai-embed-large:latest
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: qwen3.8-flash-next
-    litellm_params:
-      model: openai/qwen3.8-flash-next
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: gpt-oss-120b
-    litellm_params:
-      model: openai/gpt-oss-120b
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: deepseek-v4-flash-thinking
-    litellm_params:
-      model: openai/deepseek-v4-flash-thinking
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: multilingual-e5-large-instruct
-    litellm_params:
-      model: openai/multilingual-e5-large-instruct
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: coder
-    litellm_params:
-      model: openai/coder
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: deepseek-thinking
-    litellm_params:
-      model: openai/deepseek-thinking
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: command-a
-    litellm_params:
-      model: openai/command-a
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: auto-llm
-    litellm_params:
-      model: openai/auto-llm
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: all-proxy-models
-    litellm_params:
-      model: openai/all-proxy-models
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: glm-5.2
-    litellm_params:
-      model: openai/glm-5.2
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: nomic-embed-text-v2-moe
-    litellm_params:
-      model: openai/nomic-embed-text-v2-moe
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: gemma4
-    litellm_params:
-      model: openai/gemma4
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: deepseek-v4-flash
-    litellm_params:
-      model: openai/deepseek-v4-flash
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: glm-5.3
-    litellm_params:
-      model: openai/glm-5.3
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
   - model_name: agentic
     litellm_params:
       model: openai/agentic
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: qwen3.8-27b
-    litellm_params:
-      model: openai/qwen3.8-27b
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: whisper-large-v3
-    litellm_params:
-      model: openai/whisper-large-v3
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: mistral-medium-3.5
-    litellm_params:
-      model: openai/mistral-medium-3.5
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: nrp
-    litellm_params:
-      model: openai/nrp
-      api_base: https://llm.ai.e-infra.cz/v1
-      api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: thinker
-    litellm_params:
-      model: openai/thinker
       api_base: https://llm.ai.e-infra.cz/v1
       api_key: os.environ/METACENTRUM_API_KEY
   - model_name: qwen3.5
@@ -149,9 +9,59 @@ model_list:
       model: openai/qwen3.5
       api_base: https://llm.ai.e-infra.cz/v1
       api_key: os.environ/METACENTRUM_API_KEY
-  - model_name: qwen3-embedding-4b
+  - model_name: mini
     litellm_params:
-      model: openai/qwen3-embedding-4b
+      model: openai/mini
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: multilingual-e5-large-instruct
+    litellm_params:
+      model: openai/multilingual-e5-large-instruct
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: gpt-oss-120b
+    litellm_params:
+      model: openai/gpt-oss-120b
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: deepseek-thinking
+    litellm_params:
+      model: openai/deepseek-thinking
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: deepseek-v4.1-flash-thinking
+    litellm_params:
+      model: openai/deepseek-v4.1-flash-thinking
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: all-proxy-models
+    litellm_params:
+      model: openai/all-proxy-models
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: kimi
+    litellm_params:
+      model: openai/kimi
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: deepseek
+    litellm_params:
+      model: openai/deepseek
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: coder
+    litellm_params:
+      model: openai/coder
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: kimi-k3
+    litellm_params:
+      model: openai/kimi-k3
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: deepseek-v4.1-flash
+    litellm_params:
+      model: openai/deepseek-v4.1-flash
       api_base: https://llm.ai.e-infra.cz/v1
       api_key: os.environ/METACENTRUM_API_KEY
   - model_name: glm
@@ -159,9 +69,94 @@ model_list:
       model: openai/glm
       api_base: https://llm.ai.e-infra.cz/v1
       api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: qwen3.8-flash-next
+    litellm_params:
+      model: openai/qwen3.8-flash-next
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
   - model_name: nomic-embed-text-v1.5
     litellm_params:
       model: openai/nomic-embed-text-v1.5
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: whisper-large-v3
+    litellm_params:
+      model: openai/whisper-large-v3
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: auto-llm-heuristic
+    litellm_params:
+      model: openai/auto-llm-heuristic
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: glm-5.3
+    litellm_params:
+      model: openai/glm-5.3
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: qwen3.5-int4
+    litellm_params:
+      model: openai/qwen3.5-int4
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: qwen3-reranker-4b
+    litellm_params:
+      model: openai/qwen3-reranker-4b
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: mxbai-embed-large:latest
+    litellm_params:
+      model: openai/mxbai-embed-large:latest
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: gemma4
+    litellm_params:
+      model: openai/gemma4
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: qwen3-embedding-4b
+    litellm_params:
+      model: openai/qwen3-embedding-4b
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: nomic-embed-text-v2-moe
+    litellm_params:
+      model: openai/nomic-embed-text-v2-moe
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: nrp
+    litellm_params:
+      model: openai/nrp
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: command-a
+    litellm_params:
+      model: openai/command-a
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: qwen3.8-27b
+    litellm_params:
+      model: openai/qwen3.8-27b
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: auto-llm
+    litellm_params:
+      model: openai/auto-llm
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: mistral-medium-3.5
+    litellm_params:
+      model: openai/mistral-medium-3.5
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: thinker
+    litellm_params:
+      model: openai/thinker
+      api_base: https://llm.ai.e-infra.cz/v1
+      api_key: os.environ/METACENTRUM_API_KEY
+  - model_name: glm-5
+    litellm_params:
+      model: openai/glm-5
       api_base: https://llm.ai.e-infra.cz/v1
       api_key: os.environ/METACENTRUM_API_KEY
 
