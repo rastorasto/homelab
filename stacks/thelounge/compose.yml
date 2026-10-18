@@ -9,7 +9,7 @@ services:
         networks:
             - proxy
         volumes:
-            - ${DOCKER_DATA:-/home/meow/docker-data}/thelounge/data:/var/opt/thelounge
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/thelounge/data:/var/opt/thelounge
         environment:
             - THELOUNGE_HOME=/var/opt/thelounge
 

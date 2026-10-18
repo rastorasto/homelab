@@ -13,8 +13,8 @@ services:
         volumes:
             - /mnt/data/torrents/audiobooks:/audiobooks
             - /mnt/data/torrents/podcasts:/podcasts
-            - ${DOCKER_DATA:-/home/meow/docker-data}/audiobookshelf/config:/config
-            - ${DOCKER_DATA:-/home/meow/docker-data}/audiobookshelf/metadata:/metadata
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/audiobookshelf/config:/config
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/audiobookshelf/metadata:/metadata
 
 networks:
     proxy:

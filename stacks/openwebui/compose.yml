@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ${DOCKER_DATA:-/home/meow/docker-data}/openwebui/data:/app/backend/data
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/openwebui/data:/app/backend/data
     networks:
       - proxy
 

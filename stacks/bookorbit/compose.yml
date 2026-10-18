@@ -24,7 +24,7 @@ services:
         condition: service_healthy
     volumes:
       - /mnt/data/media/books:/books
-      - ${DOCKER_DATA:-/home/meow/docker-data}/bookorbit/app:/data
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/bookorbit/app:/data
     read_only: true
     tmpfs:
       - /tmp
@@ -57,7 +57,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ${DOCKER_DATA:-/home/meow/docker-data}/bookorbit/postgres:/var/lib/postgresql/data
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/bookorbit/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
       interval: 10s

@@ -14,9 +14,9 @@ services:
         volumes:
             - ./Caddyfile:/etc/caddy/Caddyfile:ro
             - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/data:/data
-            - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/config:/config
-            - ${DOCKER_DATA:-/home/meow/docker-data}/caddy/logs:/var/log/caddy
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/caddy/data:/data
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/caddy/config:/config
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/caddy/logs:/var/log/caddy
         environment:
             - CLOUDFLARE_API_TOKEN=${CF_API_TOKEN}
             - DOMAIN=${DOMAIN_NAME}

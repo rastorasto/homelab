@@ -10,8 +10,8 @@ services:
         networks:
             - proxy
         volumes:
-            - ${DOCKER_DATA:-/home/meow/docker-data}/jellyfin:/config
-            - ${DOCKER_DATA:-/home/meow/docker-data}/jellyfin/cache:/cache
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/jellyfin:/config
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/jellyfin/cache:/cache
             - /mnt/data/torrents/media:/media:ro
 
 networks:

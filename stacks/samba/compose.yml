@@ -16,9 +16,9 @@ services:
             - /home/rasto:/storage/meow
             - /mnt/data:/storage/data
             - /mnt/data/torrents/media:/storage/media
-            - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/consume:/storage/paperless-inbox
-            - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/export:/storage/paperless-export
-            - ${DOCKER_DATA:-/home/meow/docker-data}/running/data:/storage/running
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/paperless/consume:/storage/paperless-inbox
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/paperless/export:/storage/paperless-export
+            - ${DOCKER_DATA:-/home/rasto/docker-data}/running/data:/storage/running
 
 networks:
     proxy:

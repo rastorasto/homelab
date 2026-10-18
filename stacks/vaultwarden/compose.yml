@@ -10,7 +10,7 @@ services:
       caddy: vaultwarden.${DOMAIN_NAME:-mnau.org}
       caddy.reverse_proxy: "{{upstreams 80}}"
     volumes:
-      - ${DOCKER_DATA:-/home/meow/docker-data}/vaultwarden/data:/data/
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/vaultwarden/data:/data/
     networks:
       - proxy
 

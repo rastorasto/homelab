@@ -10,7 +10,7 @@ services:
       - USER_UID=1000
       - USER_GID=1000
     volumes:
-      - ${DOCKER_DATA:-/home/meow/docker-data}/forgejo/data:/data
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/forgejo/data:/data
       - /etc/localtime:/etc/localtime:ro
     networks:
         - proxy

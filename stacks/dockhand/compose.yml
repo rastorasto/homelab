@@ -10,7 +10,7 @@ services:
       - proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${DOCKER_DATA:-/home/meow/docker-data}/dockhand/data:/app/data
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/dockhand/data:/app/data
     # backups disabled: handled by backup/backup.sh (restic via cron)
 
 networks:

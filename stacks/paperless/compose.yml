@@ -4,7 +4,7 @@ services:
     container_name: paperless-broker
     restart: unless-stopped
     volumes:
-      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/redis:/data
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/paperless/redis:/data
     networks:
       - paperless-internal
   paperless:
@@ -21,10 +21,10 @@ services:
     depends_on:
       - broker
     volumes:
-      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/data:/usr/src/paperless/data
-      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/media:/usr/src/paperless/media
-      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/export:/usr/src/paperless/export
-      - ${DOCKER_DATA:-/home/meow/docker-data}/paperless/consume:/usr/src/paperless/consume
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/paperless/data:/usr/src/paperless/data
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/paperless/media:/usr/src/paperless/media
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/paperless/export:/usr/src/paperless/export
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/paperless/consume:/usr/src/paperless/consume
     networks:
       - paperless-internal
       - proxy

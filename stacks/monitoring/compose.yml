@@ -14,7 +14,7 @@ services:
       - proxy
     volumes:
       - ./prometheus:/etc/prometheus:ro
-      - ${DOCKER_DATA:-/home/meow/docker-data}/monitoring/prometheus:/prometheus
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/monitoring/prometheus:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.retention.time=7d"
@@ -62,7 +62,7 @@ services:
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-      - ${DOCKER_DATA:-/home/meow/docker-data}/monitoring/grafana:/var/lib/grafana
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/monitoring/grafana:/var/lib/grafana
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -71,7 +71,7 @@ services:
     pid: host
     volumes:
       - /:/host:ro,rslave
-      - ${DOCKER_DATA:-/home/meow/docker-data}/.backup-metrics:/textfile:ro
+      - ${DOCKER_DATA:-/home/rasto/docker-data}/.backup-metrics:/textfile:ro
     command:
       - "--path.rootfs=/host"
       - "--collector.textfile.directory=/textfile"
